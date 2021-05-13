@@ -1,0 +1,4 @@
+/CMakeLists.txt
+/cmake-build-debug-remote-host/
+/cmake-build-debug-mingw/
+/main.c
