@@ -6,6 +6,8 @@
  * Questions:
  *      1)Shafran uses iterator in this map and we don't need it really...
  *      2) add int2str
+ *      3)gameID needs to be in going up order
+ *      4)need to add to game id a sight that game is dead
  */
 
 #include "game.h"
@@ -23,56 +25,57 @@ GameTable gameTableCreate()
     return mapCreate(copyGameData,copyId,freeGameData,freeGameId,compareGameId);
 }
 
-void gameTableDestroy(GameTable gameTable)
+void gameTableDestroy(GameTable game_table)
 {
-    mapClear(gameTable);
-    mapDestroy(gameTable);
+    mapClear(game_table);
+    mapDestroy(game_table);
 }
 
-int gameTableGetSize(GameTable gameTable)
+int gameTableGetSize(GameTable game_table)
 {
-    return mapGetSize(gameTable);
+    return mapGetSize(game_table);
 }
 
-bool GameTableContains(GameTable gameTable, GameId id)
+bool gameTableContains(GameTable game_table, GameId id)
 {
-    return mapContains(gameTable, id);
+    return mapContains(game_table, id);
 }
 
-GameErrorCode gameAddOrEdit(GameTable gameTable, GameId id, GameData data)
+GameErrorCode gameAddOrEdit(GameTable game_table, GameId id, GameData data)
 {
-    return mapPut(gameTable, id, data);
+    return mapPut(game_table, id, data);
 }
 
-GameData gameGet(GameTable gameTable, GameId id)
+GameData gameGet(GameTable game_table, GameId id)
 {
-    return mapGet(gameTable, id);
+    return mapGet(game_table, id);
 }
 
-GameErrorCode editGameResult(GameTable gameTable, GameId id, GameResult newResult)
+GameErrorCode editGameResult(GameTable game_table, GameId id, GameResult new_result)
 {
-    GameData newGameData= gameGet(gameTable, id);
-    changeGameResult(newGameData, newResult);]
-    gameAddOrEdit(gameTable, id, newGameData);
+    GameData new_game_data= gameGet(game_table, id);
+    changeGameResult(new_game_data, new_result);
+    return gameAddOrEdit(game_table, id, new_game_data);
 }
 
 
 static MapKeyElement copyId(MapKeyElement id)
 {
-    GameId tempId = id;      //to avoid casting const pointer
-    char* stringId=(char*)tempId;
     if(id == NULL)
     {
         return NULL;
     }
 
-    char* newId = malloc(sizeof(char)*(strlen(stringId)+1));
-    if(newId == NULL)
+    GameId temp_id = id;      //to avoid casting const pointer
+    char* string_id=(char*)temp_id;
+
+    char* new_id = malloc(sizeof(char)*(strlen(string_id)+1));
+    if(new_id == NULL)
     {
         return NULL;
     }
-    strcpy(newId,stringId);
-    return newId;
+    strcpy(new_id,string_id);
+    return new_id;
 }
 
 static MapDataElement copyGameData(MapDataElement data)
@@ -96,8 +99,8 @@ static void freeGameData(MapKeyElement data)
 
 static int compareGameId(MapKeyElement id1, MapKeyElement id2)
 {
-    MapKeyElement id1Temp = id1;    //to avoid casting const pointer
-    MapKeyElement id2Temp = id2;
-    return strcmp((GameId)id1Temp,(GameId)id2Temp);
+    MapKeyElement id1_temp = id1;    //to avoid casting const pointer
+    MapKeyElement id2_temp = id2;
+    return strcmp((GameId)id1_temp,(GameId)id2_temp);
 }
 

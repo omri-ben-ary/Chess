@@ -29,53 +29,53 @@ GameTable gameTableCreate();
 
 /**
  *
- * @param gameTable - the game table to destroy
+ * @param game_table - the game table to destroy
  */
-void gameTableDestroy(GameTable gameTable);
+void gameTableDestroy(GameTable game_table);
 
 /**
  *
- * @param gameTable - the game table whom size is returned
+ * @param game_table - the game table whom size is returned
  * @return
  *      UNDEFINED_SIZE if game table is NULL
  *      otherwise returns the game table's size
  */
-int gameTableGetSize(GameTable gameTable);
+int gameTableGetSize(GameTable game_table);
 
 /**
  *
- * @param gameTable - the game table to search in
+ * @param game_table - the game table to search in
  * @param id - the game id to search for
  * @return true if the game is found and false otherwise
  */
-bool GameTableContains(GameTable gameTable, GameId id);
+bool gameTableContains(GameTable game_table, GameId id);
 
 /**
  *
- * @param gameTable - game table to add game to.
+ * @param game_table - game table to add game to.
  * @param id - game key
  * @param data - game data
  * @return - Map error codes if anything failed
  */
-GameErrorCode gameAddOrEdit(GameTable gameTable, GameId id, GameData data);
+GameErrorCode gameAddOrEdit(GameTable game_table, GameId id, GameData data);
 
 /**
  *
- * @param gameTable - the game table to fetch game data from
+ * @param game_table - the game table to fetch game data from
  * @param id - the game id to fetch data from
  * @return
  *      NULL if the game table is NULL or the game id wasn't found
  *      otherwise return the game data
  */
-GameData gameGet(GameTable gameTable, GameId id);
+GameData gameGet(GameTable game_table, GameId id);
 
 /**
  *
- * @param gameTable - game table in which the wanted game to update is found
+ * @param game_table - game table in which the wanted game to update is found
  * @param id - game id
- * @param newResult - new result of the game
+ * @param new_result - new result of the game
  */
-GameErrorCode editGameResult(GameTable gameTable, GameId id, GameResult newResult);
+GameErrorCode editGameResult(GameTable game_table, GameId id, GameResult new_result);
 
 
 #endif //EX1Q4_GAME_H

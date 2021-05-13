@@ -6,14 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct GameData_t{
-    PlayerId p1;
-    PlayerId p2;
-    GameResult result;
-    int gameTime;
-};
 
-GameData gameCreate(PlayerId p1, PlayerId p2, GameResult result, int gameTime)
+GameData gameCreate(PlayerId p1, PlayerId p2, GameResult result, int game_time)
 {
     if(p1 == NULL || p2 == NULL)
     {
@@ -38,28 +32,44 @@ GameData gameCreate(PlayerId p1, PlayerId p2, GameResult result, int gameTime)
         free(game);
         return NULL;
     }
-
+    strcpy(game->p1,p1);
+    strcpy(game->p2,p2);
     game->result = result;
-    game->gameTime = gameTime;
+    game->game_time = game_time;
 
     return game;
 }
 
-GameData copyData(GameData srcData)
+GameData copyData(GameData src_data)
 {
-    PlayerId copyP1 = malloc((strlen((PlayerId)srcData->p1)+1)*sizeof(char));
-    if(copyP1 == NULL)
+    if(src_data == NULL)
     {
         return NULL;
     }
-    PlayerId copyP2 = malloc((strlen((PlayerId)srcData->p2)+1)*sizeof(char));
-    if(copyP1 == NULL)
+
+    GameData copy_game = malloc(sizeof(*copy_game));
+    if(copy_game == NULL)
     {
-    return NULL;
+        return NULL;
     }
-    strcpy(copyP1,srcData->p1);
-    strcpy(copyP2,srcData->p2);
-    return gameCreate(copyP1,copyP2,srcData->result,srcData->gameTime);
+
+    copy_game->p1 = malloc((strlen((PlayerId)src_data->p1)+1)*sizeof(*copy_game->p1));
+    if(copy_game->p1 == NULL)
+    {
+        return NULL;
+    }
+    copy_game->p2 = malloc((strlen((PlayerId)src_data->p2)+1)*sizeof(*copy_game->p2));
+    if(copy_game->p2 == NULL)
+    {
+        free(copy_game->p1);
+        return NULL;
+    }
+    strcpy(copy_game->p1,src_data->p1);
+    strcpy(copy_game->p2,src_data->p2);
+
+    copy_game->result = src_data->result;
+    copy_game->game_time = src_data->game_time;
+    return copy_game;
 }
 
 void gameDestroy(GameData game)
@@ -73,7 +83,7 @@ void gameDestroy(GameData game)
     free(game);
 }
 
-void changeGameResult(GameData game, GameResult newResult)
+void changeGameResult(GameData game, GameResult new_result)
 {
-    game->result = newResult;
+    game->result = new_result;
 }

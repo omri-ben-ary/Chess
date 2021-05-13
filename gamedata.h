@@ -14,6 +14,13 @@ typedef enum {
     TIE
 }GameResult;
 
+struct GameData_t{
+    PlayerId p1;
+    PlayerId p2;
+    GameResult result;
+    int game_time;
+};
+
 /**value type of map**/
 typedef struct GameData_t *GameData;
 
@@ -22,10 +29,10 @@ typedef struct GameData_t *GameData;
  * @param p1 - player 1 id
  * @param p2 - player 2 id
  * @param result - game result
- * @param gameTime - games total time
+ * @param game_time - games total time
  * @return
  */
-GameData gameCreate(PlayerId p1, PlayerId p2, GameResult result, int gameTime);
+GameData gameCreate(PlayerId p1, PlayerId p2, GameResult result, int game_time);
 
 /**
  *
@@ -35,17 +42,17 @@ void gameDestroy(GameData game);
 
 /**
  *
- * @param srcData - variable to copy the data from
+ * @param src_data - variable to copy the data from
  * @return if allocation didn't work NULL
- *         otherwise pointer to copy of srcData
+ *         otherwise pointer to copy of src_data
  */
-GameData copyData(GameData srcData);
+GameData copyData(GameData src_data);
 
 /**
  *
  * @param game - game data to change
- * @param newResult - new result to enter
+ * @param new_result - new result to enter
  */
-void changeGameResult(GameData game, GameResult newResult);
+void changeGameResult(GameData game, GameResult new_result);
 
 #endif //EX1Q4_GAME_DATA_H
