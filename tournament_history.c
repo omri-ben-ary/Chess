@@ -22,7 +22,7 @@ TournamentStats tournamentStatsCreate(int max_games_allowed)
     {
         return NULL;
     }
-    tournament->games = malloc(sizeof(int) * max_games_allowed);
+    tournament->games = malloc(sizeof(tournament->games) * max_games_allowed);
     if (tournament->games == NULL)
     {
         free(tournament);

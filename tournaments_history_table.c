@@ -52,7 +52,7 @@ static int compareTournamentIds(MapKeyElement id1, MapKeyElement id2)
 
 TournamentsHistoryTable tournamentsHistoryTableCreate()
 {
-    return mapCreate(copyTournamentStats, copyTournamentId, freeTournamentStats, freeTournamentId, compareTournamentIds);
+    return mapCreate(copyTournamentStats,copyTournamentId,freeTournamentStats,freeTournamentId,compareTournamentIds);
 }
 
 void tournamentsHistoryTableDestroy(TournamentsHistoryTable tournaments_history_table)
@@ -76,10 +76,10 @@ TournamentStats tournamentStatsGet(TournamentsHistoryTable tournaments_history_t
     return mapGet(tournaments_history_table, &tournament_id);
 }
 
-MapResult tournamentStatsPut(TournamentsHistoryTable tournaments_table,
+MapResult tournamentStatsPut(TournamentsHistoryTable tournament_history_table,
                              TournamentID tournament_id, TournamentStats tournament_stats)
 {
-    return mapPut(tournaments_table, &tournament_id, tournament_stats);
+    return mapPut(tournament_history_table, &tournament_id, tournament_stats);
 }
 
 TournamentStatsResult addGameStatsToTournamentStats(TournamentsHistoryTable tournament_history_table,
@@ -87,4 +87,9 @@ TournamentStatsResult addGameStatsToTournamentStats(TournamentsHistoryTable tour
 {
     TournamentStats ptr_to_tournament_stats = tournamentStatsGet(tournament_history_table,tournament_id);
     return gameStatsAdd(ptr_to_tournament_stats, game_id);
+}
+
+TournamentsHistoryTable tournamentsHistoryTableCopy(TournamentsHistoryTable tournament_history_table)
+{
+    return mapCopy(tournament_history_table);
 }

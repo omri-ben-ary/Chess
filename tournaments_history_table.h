@@ -97,4 +97,11 @@ MapResult tournamentStatsPut(TournamentsHistoryTable tournaments_table,
 TournamentStatsResult addGameStatsToTournamentStats(TournamentsHistoryTable tournament_history_table,
                                                     int tournament_id, int game_id);
 
+/**
+ * tournaments_history_table_copy : create a copy of a given history table.
+ * @param tournament_history_table : the map to copy.
+ * @return a copy of the table.
+ */
+TournamentsHistoryTable tournamentsHistoryTableCopy(TournamentsHistoryTable tournament_history_table);
+
 #endif //MAIN_C_GAME_HISTORY_H

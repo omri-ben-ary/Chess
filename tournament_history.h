@@ -7,6 +7,7 @@ typedef struct TournamentStats_t *TournamentStats;
 
 typedef enum TournamentStatsResult_t
 {
+    TOURNAMENT_STATS_OUT_OF_MEMORY,
     TOURNAMENT_STATS_NULL_POINTER,
     GAME_ID_IS_ALREADY_TAKEN,
     TOURNAMENT_STATS_FULL_OF_GAMES,
@@ -57,7 +58,7 @@ bool gameStatsContainedCheck(TournamentStats tournament, int game_id);
 TournamentStatsResult gameStatsAdd(TournamentStats tournament, int game_id);
 
 /**
- * tournamentStatsDestroy: destroy the tournament stats object and frees all the memory that were allocated.
+ * tournamentStatsDestroy: destroy the tournament stats object and frees all the memory that was allocated.
  * @param tournament : the tournament to destroy.
  */
 void tournamentStatsDestroy(TournamentStats tournament);
