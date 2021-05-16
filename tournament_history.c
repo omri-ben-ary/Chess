@@ -17,7 +17,7 @@ TournamentStats tournamentStatsCreate(int max_games_allowed)
     {
         return NULL;
     }
-    TournamentStats tournament = malloc(sizeof (*tournament));
+    TournamentStats tournament = malloc(sizeof(*tournament));
     if (tournament == NULL)
     {
         return NULL;
@@ -44,7 +44,7 @@ bool playerPlayedMaxGamesCheck(TournamentStats tournament)
     return (tournament->max_games_allowed - tournament->games_attended_amount);
 }
 
-int maxGamesAllowedGet(TournamentStats tournament)
+int tournamentStatsGetMaxGamesAllowed(TournamentStats tournament)
 {
     return tournament->max_games_allowed;
 }
@@ -72,7 +72,7 @@ TournamentStatsResult gameStatsAdd(TournamentStats tournament, int game_id)
     {
         return GAME_ID_IS_ALREADY_TAKEN;
     }
-    if (playerPlayedMaxGamesCheck(tournament))
+    if (!(playerPlayedMaxGamesCheck(tournament)))
     {
         return TOURNAMENT_STATS_FULL_OF_GAMES;
     }
@@ -116,3 +116,20 @@ TournamentStats tournamentStatsInteriorCopy(TournamentStats tournament)
     return copy_of_tournament_stats;
 }
 
+int* tournamentStatsGetGames(TournamentStats tournament)
+{
+    if (tournament == NULL)
+    {
+        return NULL;
+    }
+    int *list_of_games = malloc(sizeof(*list_of_games)*(tournament->max_games_allowed));
+    if (list_of_games == NULL)
+    {
+        return NULL;
+    }
+    for (int i = 0; i < tournament->max_games_allowed; i++) // the rest of the array will be zeroes
+    {
+        list_of_games[i] = tournament->games[i];
+    }
+    return list_of_games;
+}

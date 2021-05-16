@@ -51,4 +51,79 @@ TournamentStatsResult playerStatsAddGame(PlayerStats player_stats, int tournamen
  */
 PlayerStats playerStatsInteriorCopy(PlayerStats player_stats);
 
+/**
+ * playerStatsRemoveTournament: check if an tournament id exists in player's records. if it does - it deletes it.
+ * @param player_stats : the element which we want to delete the records of.
+ * @param tournament_id : the id of the tournament we want to delete.
+ */
+void playerStatsRemoveTournament (PlayerStats player_stats, TournamentID tournament_id);
+
+/**
+ * playerStatsGetTournaments : get a list of the games a given player has taken part in a given tournament.
+ * @param player_stats : the player we want to get the games he was part of in a given tournament.
+ * @param tournament_id : the id of the tournament we want to find the games the given player has taken part in.
+ * @return list of the games a given player has taken player in a given tournament.
+ */
+int* playerStatsGetGamesInTournament(PlayerStats player_stats, TournamentID tournament_id);
+
+/**
+ * playerStatsGetTournaments: get a list of the tournaments a given player has taken part in.
+ * @param player_stats : the player we want to get the tournaments he was part of.
+ * @return list of the tournaments a given player has taken part in.
+ */
+int* playerStatsGetTournaments(PlayerStats player_stats);
+
+/**
+ * PlayerStatsGetMaxGamesForTournament: get max games allowed for a given tournament.
+ * @param player_stats : the player which we want to find the max games allowed for one of the tournament he is part of
+ * @param tournament_id : the tournament we want to find his max games limit.
+ * @return max games allowed for a given tournament.
+ */
+int playerStatsGetMaxGamesForTournament(PlayerStats player_stats, TournamentID tournament_id);
+
+/**
+ * playerStatsAddWin: add win to the player stats.
+ * @param player_stats : the player to add the win to.
+ */
+void playerStatsAddWin(PlayerStats player_stats);
+
+/**
+ * playerStatsAddTie: add tie to the player stats.
+ * @param player_stats : the player to add the tie to.
+ */
+void playerStatsAddTie(PlayerStats player_stats);
+
+/**
+ * playerStatsAddLose: add lose to the player stats.
+ * @param player_stats : the player to add the lose to.
+ */
+void playerStatsAddLose(PlayerStats player_stats);
+
+/**
+ * playerStatsGetWins: get number of wins of player.
+ * @param player_stats : the player to get the number of wins of.
+ * @return number of wins of player.
+ */
+int playerStatsGetWins(PlayerStats player_stats);
+
+/**
+ * playerStatsGetTies: get number of ties of player.
+ * @param player_stats : the player to get the number of ties of.
+ * @return number of ties of player.
+ */
+int playerStatsGetTies(PlayerStats player_stats);
+
+/**
+ * playerStatsGetLoses: get number of loses of player.
+ * @param player_stats : the player to get the number of loses of.
+ * @return number of loses of player.
+ */
+int playerStatsGetLoses(PlayerStats player_stats);
+
+/**
+ * playerStatsNullifyStats: nullify a given player's stats.
+ * @param player_stats : the player to nullify his stats.
+ */
+void playerStatsNullifyStats(PlayerStats player_stats);
+
 #endif //MAIN_C_PLAYER_STATS_H

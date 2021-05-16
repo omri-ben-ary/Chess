@@ -31,11 +31,11 @@ TournamentStats tournamentStatsCreate(int max_games_allowed);
 bool playerPlayedMaxGamesCheck(TournamentStats tournament);
 
 /**
- * maxGamesAllowedGet : gets the maximum games allowed for one player to attend in given tournament.
+ * tournamentStatsGetMaxGamesAllowed : gets the maximum games allowed for one player to attend in given tournament.
  * @param tournament : the tournament which we want to understand his games limit .
  * @return : maximum games allowed in a given tournament.
  */
-int maxGamesAllowedGet(TournamentStats tournament);
+int tournamentStatsGetMaxGamesAllowed(TournamentStats tournament);
 
 /**
  * gameStatsContainedCheck : checks if the games stats of a given game id is already stored.
@@ -70,6 +70,14 @@ void tournamentStatsDestroy(TournamentStats tournament);
  *          NULL if there was any allocation memory fail or the tournament is null
  */
 TournamentStats tournamentStatsInteriorCopy(TournamentStats tournament);
+
+/**
+ * tournamentStatsGetGames: create a list of the games that a given player played in a given tournament.
+ * @param tournament : the tournament which we want to get the games the player played in.
+ * @return a list of the games that a player played in a given tournament
+ */
+int* tournamentStatsGetGames(TournamentStats tournament);
+
 
 #endif //MAIN_C_TOURNAMENT_HISTORY_H
 

@@ -13,7 +13,7 @@ typedef Map TournamentsHistoryTable;
 * 	NULL - if one of the parameters is NULL or allocations failed.
 * 	A new empty table in case of success.
 */
-TournamentsHistoryTable  tournamentsHistoryTableCreate();
+TournamentsHistoryTable tournamentsHistoryTableCreate();
 
 /**
 * tournaments_history_table: Deallocates an existing map. Clears all elements by using the
@@ -70,7 +70,7 @@ TournamentStats tournamentStatsGet(TournamentsHistoryTable tournaments_history_t
 *
 * @param tournaments_table - The map for which to reassign the new tournament history
 * @param tournament_id - The id of the tournament which need to be reassigned
-* @param tournament_stats - The the tournaments stats to associate with the given id.
+* @param tournament_stats - The tournaments stats to associate with the given id.
 *      A copy of the tournament history will be inserted as supplied by the copying function
 *      which is given at initialization and old data memory would be
 *      deleted using the free function given at initialization.
@@ -98,10 +98,27 @@ TournamentStatsResult addGameStatsToTournamentStats(TournamentsHistoryTable tour
                                                     int tournament_id, int game_id);
 
 /**
- * tournaments_history_table_copy : create a copy of a given history table.
+ * tournamentsHistoryTableCopy : create a copy of a given history table.
  * @param tournament_history_table : the map to copy.
  * @return a copy of the table.
  */
 TournamentsHistoryTable tournamentsHistoryTableCopy(TournamentsHistoryTable tournament_history_table);
+
+/**
+ * tournamentGetGames: create a list of the games that a given player played in a given tournament.
+ * @param tournaments_history_table : the map that contains all of the tournaments that a player was taking part it,
+ * and specifically the tournament which we want to get the games the player was taking part in.
+ * @param tournament_id : the id of the tournament we want to get the list of games that the player was taking part in.
+ * @return a list of the games that a player played in a given tournament
+ */
+int* tournamentGetGames(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id);
+
+/**
+ * tournamentsGetMaxGamesForTournament : get max games allowed for a given tournament.
+ * @param tournaments_history_table : the map of tournaments.
+ * @param tournament_id : the id of the wanted tournament.
+ * @return max games allowed for tournament.
+ */
+int tournamentsGetMaxGamesForTournament(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id);
 
 #endif //MAIN_C_GAME_HISTORY_H
