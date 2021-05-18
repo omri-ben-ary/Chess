@@ -1,65 +1,51 @@
-//
-// Created by User on 11/05/2021.
-//
-
 #include "gamedata.h"
 #include <string.h>
 #include <stdlib.h>
+#define DELETED_PLAYER (-1)
 
 struct GameData_t{
-    PlayerId p1;
-    PlayerId p2;
+    int p1;
+    int p2;
     GameResult result;
-    int gameTime;
+    int game_time;
 };
 
-GameData gameCreate(PlayerId p1, PlayerId p2, GameResult result, int gameTime)
+
+GameData gameCreate(int p1, int p2, GameResult result, int game_time)
 {
-    if(p1 == NULL || p2 == NULL)
-    {
-        return NULL;
-    }
+
     GameData game = malloc(sizeof(*game));
     if(game == NULL)
     {
         return NULL;
     }
 
-    game->p1 = malloc((strlen(p1)+1)*sizeof(PlayerId));
-    if(game->p1 == NULL)
-    {
-        free(game);
-        return NULL;
-    }
-    game->p2 = malloc((strlen(p2)+1)*sizeof(PlayerId));
-    if(game->p2 == NULL)
-    {
-        free(game->p1);
-        free(game);
-        return NULL;
-    }
-
+    game->p1 = p1;
+    game->p2 = p2;
     game->result = result;
-    game->gameTime = gameTime;
+    game->game_time = game_time;
 
     return game;
 }
 
-GameData copyData(GameData srcData)
+GameData gameDataCopy(GameData src_data)
 {
-    PlayerId copyP1 = malloc((strlen((PlayerId)srcData->p1)+1)*sizeof(char));
-    if(copyP1 == NULL)
+    if(src_data == NULL)
     {
         return NULL;
     }
-    PlayerId copyP2 = malloc((strlen((PlayerId)srcData->p2)+1)*sizeof(char));
-    if(copyP1 == NULL)
+
+    GameData copy_game = malloc(sizeof(*copy_game));
+    if(copy_game == NULL)
     {
-    return NULL;
+        return NULL;
     }
-    strcpy(copyP1,srcData->p1);
-    strcpy(copyP2,srcData->p2);
-    return gameCreate(copyP1,copyP2,srcData->result,srcData->gameTime);
+
+    copy_game->p1 = src_data->p1;
+    copy_game->p2 = src_data->p2;
+    copy_game->result = src_data->result;
+    copy_game->game_time = src_data->game_time;
+    return copy_game;
 }
 
 void gameDestroy(GameData game)
@@ -68,12 +54,39 @@ void gameDestroy(GameData game)
     {
         return;
     }
-    free(game->p1);
-    free(game->p2);
     free(game);
 }
 
-void changeGameResult(GameData game, GameResult newResult)
+void changeGameResult(GameData game, GameResult new_result)
 {
-    game->result = newResult;
+    game->result = new_result;
+}
+
+void gameDataDeletePlayer(GameData game, int player_id)
+{
+    if(game->p1 == player_id)
+    {
+        game->p1 = DELETED_PLAYER;
+    } else{
+        game->p2 = DELETED_PLAYER;
+    }
+}
+
+int gameDataGetPlayer(GameData game, int player)
+{
+    if(player == PLAYER1)
+    {
+        return game->p1;
+    }
+    return game->p2;
+}
+
+GameResult gameDataGetResult(GameData game)
+{
+    return game->result;
+}
+
+int gameDataGetGameTime(GameData game)
+{
+    return game->game_time;
 }
