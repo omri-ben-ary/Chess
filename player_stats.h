@@ -42,7 +42,6 @@ bool playerStatsSearchForTournament(PlayerStats player_stats, TournamentID tourn
 TournamentStatsResult playerStatsAddGame(PlayerStats player_stats, int tournament_id,
                                          int game_id, int max_games_allowed);
 
-
 /**
  * playerStatsInteriorCopy: creates a copy of a specific player's stats
  * @param player_stats : the stats we want to create a copy of.

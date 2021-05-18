@@ -3,8 +3,10 @@
 #include "player_stats.h"
 #include <stdlib.h>
 #include <assert.h>
-
 #include <stdio.h>
+
+#define FAILURE (-1)
+
 struct PlayerStats_t{
     int num_of_wins;
     int num_of_ties;
@@ -12,17 +14,13 @@ struct PlayerStats_t{
     TournamentsHistoryTable player_tournament_history_table;
 };
 
-
 PlayerStats playerStatsCreate()
 {
-    // it seems that i malloc it 2 times (one here and one in the create and i destroy the one i malloc here)
     PlayerStats player_stats = malloc(sizeof(*player_stats));
     if (player_stats == NULL)
     {
         return NULL;
     }
-
-    // the whole mechanisem is shit!
     player_stats->player_tournament_history_table = tournamentsHistoryTableCreate();
     if (player_stats->player_tournament_history_table == NULL)
     {
@@ -48,9 +46,8 @@ void playerStatsDestroy(PlayerStats player_stats)
 bool playerStatsSearchForTournament(PlayerStats player_stats, TournamentID tournament_id)
 {
     assert (player_stats != NULL);
-    return (isTournamentContained(player_stats->player_tournament_history_table, tournament_id));
+    return (tournamentHistoryTableContain(player_stats->player_tournament_history_table, tournament_id));
 }
-
 
 TournamentStatsResult playerStatsAddGame(PlayerStats player_stats, int tournament_id,
                                          int game_id, int max_games_allowed)
@@ -60,14 +57,14 @@ TournamentStatsResult playerStatsAddGame(PlayerStats player_stats, int tournamen
     {
         return TOURNAMENT_STATS_NULL_POINTER;
     }
-    if (playerStatsSearchForTournament(player_stats, tournament_id) == false) // need to create new tournament
+    if (playerStatsSearchForTournament(player_stats, tournament_id) == false)
     {
-        TournamentStats tournament_stats = tournamentStatsCreate(max_games_allowed); // should free!!!!!!!!!!!!!!!!
+        TournamentStats tournament_stats = tournamentStatsCreate(max_games_allowed);
         if (tournament_stats == NULL)
         {
             return TOURNAMENT_STATS_OUT_OF_MEMORY;
         }
-        MapResult put_result = tournamentStatsPut(player_stats->player_tournament_history_table,
+        MapResult put_result = tournamentHistoryTablePut(player_stats->player_tournament_history_table,
                                                   tournament_id, tournament_stats);
 
         tournamentStatsDestroy(tournament_stats);
@@ -76,7 +73,7 @@ TournamentStatsResult playerStatsAddGame(PlayerStats player_stats, int tournamen
             return TOURNAMENT_STATS_OUT_OF_MEMORY;
         }
     }
-    return addGameStatsToTournamentStats(player_stats->player_tournament_history_table, tournament_id, game_id);
+    return tournamentHistoryTableAddGameStats(player_stats->player_tournament_history_table, tournament_id, game_id);
 }
 
 PlayerStats playerStatsInteriorCopy(PlayerStats player_stats)
@@ -94,7 +91,7 @@ PlayerStats playerStatsInteriorCopy(PlayerStats player_stats)
     }
 
     copy_of_player_stats->player_tournament_history_table =
-            tournamentsHistoryTableCopy(player_stats->player_tournament_history_table);
+            tournamentHistoryTableCopy(player_stats->player_tournament_history_table);
 
     copy_of_player_stats->num_of_wins = player_stats->num_of_wins;
     copy_of_player_stats->num_of_ties = player_stats->num_of_ties;
@@ -104,7 +101,7 @@ PlayerStats playerStatsInteriorCopy(PlayerStats player_stats)
 
 void playerStatsRemoveTournament (PlayerStats player_stats, TournamentID tournament_id)
 {
-    tournamentHistoryRemove(player_stats->player_tournament_history_table, tournament_id); // need to check what happens if it was already deleted
+    tournamentHistoryTableRemove(player_stats->player_tournament_history_table, tournament_id);
 }
 
 int* playerStatsGetGamesInTournament(PlayerStats player_stats, TournamentID tournament_id)
@@ -113,10 +110,10 @@ int* playerStatsGetGamesInTournament(PlayerStats player_stats, TournamentID tour
     {
         return NULL;
     }
-    return tournamentGetGames(player_stats->player_tournament_history_table,tournament_id);
+    return tournamentHistoryTableGetGames(player_stats->player_tournament_history_table,tournament_id);
 }
 
-int* playerStatsGetTournaments(PlayerStats player_stats) // NEED TO REMEMBER TO FREE!!!!!
+int* playerStatsGetTournaments(PlayerStats player_stats)
 {
     if (player_stats == NULL)
     {
@@ -125,42 +122,36 @@ int* playerStatsGetTournaments(PlayerStats player_stats) // NEED TO REMEMBER TO 
     int num_of_tournaments = 0;
     MAP_FOREACH (int * ,id, player_stats->player_tournament_history_table)
     {
-        //printf("round\n");
         num_of_tournaments++;
         free(id);
     }
-    //printf("num of tournaments:%d\n", num_of_tournaments);
     int* lst_of_tournaments = malloc(sizeof(*lst_of_tournaments) * (num_of_tournaments+1));
     if (lst_of_tournaments == NULL)
     {
         return NULL;
     }
-
-    for(int i = 0; i < num_of_tournaments +1 ; i++)
+    for (int i = 0; i < num_of_tournaments + 1 ; i++)
     {
         lst_of_tournaments[i] = 0;
     }
-    int i = 0;
-    MAP_FOREACH (int * ,id, player_stats->player_tournament_history_table) //should check memory leaks
+    int j = 0;
+    MAP_FOREACH (int * ,id, player_stats->player_tournament_history_table)
     {
-        //printf("round2\n");
-        //printf("element before free: %d\n",*id);
-        lst_of_tournaments[i] = *id; // not sure about this line
-        free(id); // not sure if it's right to free it here!
-        //printf("i:%d\n",i);
-        //i++;
+        lst_of_tournaments[j] = *id;
+        free(id);
     }
     lst_of_tournaments[num_of_tournaments] = 0;
-    //printf("who is list of tournaments:%d \n", lst_of_tournaments[0]);
     return lst_of_tournaments;
 }
 
 int playerStatsGetMaxGamesForTournament(PlayerStats player_stats, TournamentID tournament_id)
 {
-    return tournamentStatsGetMaxGamesAllowed(
-            tournamentStatsGet(player_stats->player_tournament_history_table, tournament_id));
+    if (player_stats == NULL)
+    {
+        return FAILURE;
+    }
+    return tournamentHistoryTableGetMaxGamesForTournament(player_stats->player_tournament_history_table,tournament_id);
 }
-
 
 void playerStatsAddWin(PlayerStats player_stats)
 {

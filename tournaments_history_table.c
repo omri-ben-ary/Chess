@@ -61,44 +61,46 @@ void tournamentsHistoryTableDestroy(TournamentsHistoryTable tournaments_history_
     mapDestroy(tournaments_history_table);
 }
 
-bool isTournamentContained(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
+bool tournamentHistoryTableContain(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
 {
     return mapContains(tournaments_history_table, &tournament_id);
 }
 
-MapResult tournamentHistoryRemove(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
+MapResult tournamentHistoryTableRemove(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
 {
     return mapRemove(tournaments_history_table, &tournament_id);
 }
 
-TournamentStats tournamentStatsGet(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
+TournamentStats tournamentHistoryTableGet(TournamentsHistoryTable tournaments_history_table,
+                                          TournamentID tournament_id)
 {
     return mapGet(tournaments_history_table, &tournament_id);
 }
 
-MapResult tournamentStatsPut(TournamentsHistoryTable tournament_history_table,
+MapResult tournamentHistoryTablePut(TournamentsHistoryTable tournament_history_table,
                              TournamentID tournament_id, TournamentStats tournament_stats)
 {
     return mapPut(tournament_history_table, &tournament_id, tournament_stats);
 }
 
-TournamentStatsResult addGameStatsToTournamentStats(TournamentsHistoryTable tournament_history_table,
+TournamentStatsResult tournamentHistoryTableAddGameStats(TournamentsHistoryTable tournament_history_table,
                                                     int tournament_id, int game_id)
 {
-    return gameStatsAdd(tournamentStatsGet(tournament_history_table,tournament_id), game_id);
+    return tournamentStatsAddGameStats(tournamentHistoryTableGet(tournament_history_table,tournament_id), game_id);
 }
 
-TournamentsHistoryTable tournamentsHistoryTableCopy(TournamentsHistoryTable tournament_history_table)
+TournamentsHistoryTable tournamentHistoryTableCopy(TournamentsHistoryTable tournament_history_table)
 {
     return mapCopy(tournament_history_table);
 }
 
-int* tournamentGetGames(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
+int* tournamentHistoryTableGetGames(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
 {
-    return tournamentStatsGetGames(tournamentStatsGet(tournaments_history_table, tournament_id)); // if it's null the get will know it
+    return tournamentStatsGetGames(tournamentHistoryTableGet(tournaments_history_table, tournament_id));
 }
 
-int tournamentsGetMaxGamesForTournament(TournamentsHistoryTable tournaments_history_table, TournamentID tournament_id)
+int tournamentHistoryTableGetMaxGamesForTournament(TournamentsHistoryTable tournaments_history_table,
+                                                   TournamentID tournament_id)
 {
-    return tournamentStatsGetMaxGamesAllowed(tournamentStatsGet(tournaments_history_table, tournament_id));
+    return tournamentStatsGetMaxGamesAllowed(tournamentHistoryTableGet(tournaments_history_table, tournament_id));
 }

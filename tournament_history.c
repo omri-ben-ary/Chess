@@ -5,6 +5,8 @@
 #include <string.h>
 #include "assert.h"
 
+#define FAILURE (-1)
+
 struct TournamentStats_t{
     int max_games_allowed;
     int games_attended_amount;
@@ -37,21 +39,25 @@ TournamentStats tournamentStatsCreate(int max_games_allowed)
     return tournament;
 }
 
-// notice that there arent any defence implemented here
-bool playerPlayedMaxGamesCheck(TournamentStats tournament)
+bool tournamentStatsMaxGamesCheck(TournamentStats tournament)
 {
+    assert(tournament != NULL);
     assert((tournament->max_games_allowed - tournament->games_attended_amount) >= 0 );
     return (tournament->max_games_allowed - tournament->games_attended_amount);
 }
 
 int tournamentStatsGetMaxGamesAllowed(TournamentStats tournament)
 {
+    if (tournament == NULL)
+    {
+        return FAILURE;
+    }
     return tournament->max_games_allowed;
 }
 
-bool gameStatsContainedCheck(TournamentStats tournament,int game_id)
+bool tournamentStatsContain(TournamentStats tournament,int game_id)
 {
-    assert (tournament != NULL);
+    assert (tournament != NULL && game_id > 0);
     for (int i = 0 ; i < tournament->games_attended_amount ; i++)
     {
         if (tournament->games[i] == game_id)
@@ -62,17 +68,21 @@ bool gameStatsContainedCheck(TournamentStats tournament,int game_id)
     return false;
 }
 
-TournamentStatsResult gameStatsAdd(TournamentStats tournament, int game_id)
+TournamentStatsResult tournamentStatsAddGameStats(TournamentStats tournament, int game_id)
 {
     if (tournament == NULL)
     {
         return TOURNAMENT_STATS_NULL_POINTER;
     }
-    if (gameStatsContainedCheck(tournament, game_id))
+    if (game_id <= 0)
+    {
+        return INVALID_GAME_ID;
+    }
+    if (tournamentStatsContain(tournament, game_id))
     {
         return GAME_ID_IS_ALREADY_TAKEN;
     }
-    if (!(playerPlayedMaxGamesCheck(tournament)))
+    if (!(tournamentStatsMaxGamesCheck(tournament)))
     {
         return TOURNAMENT_STATS_FULL_OF_GAMES;
     }
@@ -96,7 +106,6 @@ TournamentStats tournamentStatsInteriorCopy(TournamentStats tournament)
     {
         return NULL;
     }
-
     TournamentStats copy_of_tournament_stats = malloc(sizeof(*copy_of_tournament_stats));
     if (copy_of_tournament_stats == NULL)
     {

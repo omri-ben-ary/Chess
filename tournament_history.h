@@ -11,6 +11,7 @@ typedef enum TournamentStatsResult_t
     TOURNAMENT_STATS_NULL_POINTER,
     GAME_ID_IS_ALREADY_TAKEN,
     TOURNAMENT_STATS_FULL_OF_GAMES,
+    INVALID_GAME_ID,
     GAME_STATS_ADD_SUCCESS
 } TournamentStatsResult ;
 
@@ -23,31 +24,32 @@ typedef enum TournamentStatsResult_t
  */
 TournamentStats tournamentStatsCreate(int max_games_allowed);
 
-/** playerPlayedMaxGamesCheck : check if the player already played the maximal amount of games.
+/** tournamentStatsMaxGamesCheck : check if the player already played the maximal amount of games.
  * @param tournament : the tournament we want to check how many possible games left to the player.
  * @return : true if the player played less games than he is able to.
  *           false if the player crossed the game limit,
  */
-bool playerPlayedMaxGamesCheck(TournamentStats tournament);
+bool tournamentStatsMaxGamesCheck(TournamentStats tournament);
 
 /**
  * tournamentStatsGetMaxGamesAllowed : gets the maximum games allowed for one player to attend in given tournament.
  * @param tournament : the tournament which we want to understand his games limit .
  * @return : maximum games allowed in a given tournament.
+ *           -1 if tournament is NULL
  */
 int tournamentStatsGetMaxGamesAllowed(TournamentStats tournament);
 
 /**
- * gameStatsContainedCheck : checks if the games stats of a given game id is already stored.
+ * tournamentStatsContain : checks if the games stats of a given game id is already stored.
  * @param tournament : the tournament which we want to search for the game stats.
  * @param game_id : game id to check if already contained.
  * @return true - if game id already exists.
  *         false - if game id is new.
  */
-bool gameStatsContainedCheck(TournamentStats tournament, int game_id);
+bool tournamentStatsContain(TournamentStats tournament, int game_id);
 
 /**
- * GameStatsAdd: add game stats of a new game.
+ * tournamentStatsAddGameStats: add game stats of a new game.
  * @param tournament : the tournament to add the game stats to.
  * @param game_id : the game id of given game.
  * @return TOURNAMENT_STATS_NULL_POINTER - if tournament is null.
@@ -55,7 +57,7 @@ bool gameStatsContainedCheck(TournamentStats tournament, int game_id);
  *         TOURNAMENT_STATS_FULL_OF_GAMES - if the player played more games than allowed.
  *         GAME_STATS_ADD_SUCCESS - games stats were added successfully.
  */
-TournamentStatsResult gameStatsAdd(TournamentStats tournament, int game_id);
+TournamentStatsResult tournamentStatsAddGameStats(TournamentStats tournament, int game_id);
 
 /**
  * tournamentStatsDestroy: destroy the tournament stats object and frees all the memory that was allocated.
@@ -77,7 +79,6 @@ TournamentStats tournamentStatsInteriorCopy(TournamentStats tournament);
  * @return a list of the games that a player played in a given tournament
  */
 int* tournamentStatsGetGames(TournamentStats tournament);
-
 
 #endif //MAIN_C_TOURNAMENT_HISTORY_H
 

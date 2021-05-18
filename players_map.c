@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include <stdio.h>
-#define FAILURE -1
+#define FAILURE (-1)
 #define SUCCESS 1
 
 static MapKeyElement copyPlayerId(MapKeyElement player_id);
@@ -69,8 +69,7 @@ PlayerStats playersMapGetStats(Players players, PlayerID player_id)
     return mapGet(players, &player_id);
 }
 
-// we need this function to check if a player crossed the max allowed games limit
-TournamentStatsResult addGameStatsToPlayerStats(Players players, PlayerID player_id, int tournament_id,
+TournamentStatsResult playersMapAddGameStats(Players players, PlayerID player_id, int tournament_id,
                                                 int game_id, int max_games_per_tournament)
 {
     PlayerStats player_stats = playersMapGetStats(players,player_id);
@@ -78,8 +77,7 @@ TournamentStatsResult addGameStatsToPlayerStats(Players players, PlayerID player
     return result;
 }
 
-// for the delete player function
-MapResult playerRemove(Players players, PlayerID player_id)
+MapResult playersMapRemove(Players players, PlayerID player_id)
 {
     if (players == NULL)
     {
@@ -88,7 +86,7 @@ MapResult playerRemove(Players players, PlayerID player_id)
     return mapRemove(players, &player_id);
 }
 
-MapResult playerPut(Players players, PlayerID player_id, PlayerStats player_stats)
+MapResult playersMapPut(Players players, PlayerID player_id, PlayerStats player_stats)
 {
     if (players == NULL || player_stats == NULL)
     {
@@ -97,18 +95,18 @@ MapResult playerPut(Players players, PlayerID player_id, PlayerStats player_stat
     return mapPut(players, &player_id, player_stats);
 }
 
-int* playerGetTournaments(Players players, PlayerID player_id)
+int* playersMapGetTournaments(Players players, PlayerID player_id)
 {
-    int* lst_of_tournaments = playerStatsGetTournaments(playersMapGetStats(players,player_id));
-    return lst_of_tournaments;
+    return playerStatsGetTournaments(playersMapGetStats(players,player_id));
+
 }
 
-int* playerGetGamesInTournament(Players players, PlayerID player_id, TournamentID tournament_id)
+int* playersMapGetGamesInTournament(Players players, PlayerID player_id, TournamentID tournament_id)
 {
     return playerStatsGetGamesInTournament(playersMapGetStats(players, player_id), tournament_id);
 }
 
-void playersRemoveTournamentFromPlayerStats(Players players, PlayerID player_id, TournamentID tournament_id)
+void playersMapRemoveTournament(Players players, PlayerID player_id, TournamentID tournament_id)
 {
     assert(player_id > 0 && tournament_id > 0);
     if (players == NULL)
@@ -118,17 +116,17 @@ void playersRemoveTournamentFromPlayerStats(Players players, PlayerID player_id,
     playerStatsRemoveTournament(playersMapGetStats(players, player_id), tournament_id);
 }
 
-bool playersContain(Players players, PlayerID player_id)
+bool playersMapContain(Players players, PlayerID player_id)
 {
     return mapContains(players, &player_id);
 }
 
-int playerGetMaxGamesForTournament(Players players, PlayerID player_id, TournamentID tournament_id)
+int playersMapGetMaxGamesForTournament(Players players, PlayerID player_id, TournamentID tournament_id)
 {
     return playerStatsGetMaxGamesForTournament(playersMapGetStats(players,player_id),tournament_id);
 }
 
-int playerAddWin(Players players, PlayerID player_id)
+int playersMapAddWin(Players players, PlayerID player_id)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
     if (ptr_to_player_stats == NULL)
@@ -139,7 +137,7 @@ int playerAddWin(Players players, PlayerID player_id)
     return SUCCESS;
 }
 
-int playerAddTie(Players players, PlayerID player_id)
+int playersMapAddTie(Players players, PlayerID player_id)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
     if (ptr_to_player_stats == NULL)
@@ -150,7 +148,7 @@ int playerAddTie(Players players, PlayerID player_id)
     return SUCCESS;
 }
 
-int playerAddLose(Players players, PlayerID player_id)
+int playersMapAddLose(Players players, PlayerID player_id)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
     if (ptr_to_player_stats == NULL)
@@ -161,46 +159,56 @@ int playerAddLose(Players players, PlayerID player_id)
     return SUCCESS;
 }
 
-int playerGetWins(Players players, PlayerID player_id)
+int playersMapGetWins(Players players, PlayerID player_id)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
     if (ptr_to_player_stats == NULL)
     {
-        return FAILURE; // TODO: check it when implementing the function
+        return FAILURE;
     }
     return playerStatsGetWins(ptr_to_player_stats);
 }
 
-int playerGetTies(Players players, PlayerID player_id)
+int playersMapGetTies(Players players, PlayerID player_id)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
     if (ptr_to_player_stats == NULL)
     {
-        return FAILURE; // TODO: check it when implementing the function
+        return FAILURE;
     }
     return playerStatsGetTies(ptr_to_player_stats);
 }
 
-int playerGetLoses(Players players, PlayerID player_id)
+int playersMapGetLoses(Players players, PlayerID player_id)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
     if (ptr_to_player_stats == NULL)
     {
-        return FAILURE; // TODO: check it when implementing the function
+        return FAILURE;
     }
     return playerStatsGetLoses(ptr_to_player_stats);
 }
 
-int playerNullifyStats(Players players, PlayerID player_id) // very very important!!! (to nullify before getting out of the ranking function)
+static void playersMapNullifyStats(Players players, PlayerID player_id) // very very important!!! (to nullify before getting out of the ranking function)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
     if (ptr_to_player_stats == NULL)
     {
-        return FAILURE; // TODO: check it when implementing the function
+        return;
     }
     playerStatsNullifyStats(ptr_to_player_stats);
-    return SUCCESS;
 }
+
+void PlayersMapNullifyAllPlayerStats(Players players)
+{
+    MAP_FOREACH (int * ,player_id, players)
+    {
+        playersMapNullifyStats(players, *player_id);
+        free(player_id);
+    }
+}
+
+
 
 
 

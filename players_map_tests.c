@@ -14,16 +14,16 @@
 void test_of_players_map()
 {
     // NULL POINTERS CHECK!
-    assert(playersContain(NULL,12345) == false);
+    assert(playersMapContain(NULL,12345) == false);
     playersMapDestroy(NULL); // NO MEMORY LEAKS
     assert(playersMapGetStats(NULL, 1234) == NULL);
-    assert(addGameStatsToPlayerStats(NULL, 1234, 1234, 1234, 12) == TOURNAMENT_STATS_NULL_POINTER);
+    assert(playersMapAddGameStats(NULL, 1234, 1234, 1234, 12) == TOURNAMENT_STATS_NULL_POINTER);
     int my_id = 12345;
-    assert(playerRemove(NULL,my_id) == MAP_NULL_ARGUMENT);
-    assert(playerPut(NULL,my_id,NULL) == MAP_NULL_ARGUMENT);
-    assert(playerGetTournaments(NULL,my_id) == NULL);
-    assert(playerGetGamesInTournament(NULL,my_id, 1234) == NULL);
-    playersRemoveTournamentFromPlayerStats(NULL, my_id, 12345); // NO MEMORY LEAKS
+    assert(playersMapRemove(NULL,my_id) == MAP_NULL_ARGUMENT);
+    assert(playersMapPut(NULL,my_id,NULL) == MAP_NULL_ARGUMENT);
+    assert(playersMapGetTournaments(NULL,my_id) == NULL);
+    assert(playersMapGetGamesInTournament(NULL,my_id, 1234) == NULL);
+    playersMapRemoveTournament(NULL, my_id, 12345); // NO MEMORY LEAKS
 
     // CHECK PLAYER MAP NORMAL BEHAVIOR
 
@@ -32,53 +32,53 @@ void test_of_players_map()
     players_map_1 = playersMapCreate();
     int player1_id = 123;
     PlayerStats player1_stats = playerStatsCreate();
-    assert(playerPut(players_map_1,player1_id, player1_stats) == MAP_SUCCESS);
+    assert(playersMapPut(players_map_1,player1_id, player1_stats) == MAP_SUCCESS);
     playerStatsDestroy(player1_stats);
 
     int player2_id = 1234;
     PlayerStats player2_stats = NULL;
-    assert(playerPut(players_map_1,player2_id, player2_stats) == MAP_NULL_ARGUMENT);
-    assert(addGameStatsToPlayerStats(players_map_1, player2_id , 11111, 11111, 2) == TOURNAMENT_STATS_NULL_POINTER);
+    assert(playersMapPut(players_map_1,player2_id, player2_stats) == MAP_NULL_ARGUMENT);
+    assert(playersMapAddGameStats(players_map_1, player2_id , 11111, 11111, 2) == TOURNAMENT_STATS_NULL_POINTER);
     player2_stats = playerStatsCreate();
-    assert(playerPut(players_map_1,player2_id, player2_stats) == MAP_SUCCESS);
+    assert(playersMapPut(players_map_1,player2_id, player2_stats) == MAP_SUCCESS);
     playerStatsDestroy(player2_stats);
 
     int tournament1_id = 111111;
     int game1_id = 12345;
     int max_games_per_tournament_1 = 2;
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament1_id, game1_id, max_games_per_tournament_1) == GAME_STATS_ADD_SUCCESS);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament1_id, game1_id, max_games_per_tournament_1) == GAME_STATS_ADD_SUCCESS);
     player1_stats = playersMapGetStats(players_map_1,player1_id);
     assert(playerStatsSearchForTournament(player1_stats,tournament1_id) == true);
     int game2_id = 12345;
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament1_id, game2_id, max_games_per_tournament_1) == GAME_ID_IS_ALREADY_TAKEN);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament1_id, game2_id, max_games_per_tournament_1) == GAME_ID_IS_ALREADY_TAKEN);
     assert(playerStatsSearchForTournament(player1_stats,tournament1_id) == true);
     int game3_id = 1111111;
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament1_id, game3_id, max_games_per_tournament_1) == GAME_STATS_ADD_SUCCESS);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament1_id, game3_id, max_games_per_tournament_1) == GAME_STATS_ADD_SUCCESS);
     int game4_id = 20825;
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament1_id, game4_id, max_games_per_tournament_1) == TOURNAMENT_STATS_FULL_OF_GAMES);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament1_id, game4_id, max_games_per_tournament_1) == TOURNAMENT_STATS_FULL_OF_GAMES);
 
     int player3_id = 11111;
     PlayerStats player3_stats = playerStatsCreate();
-    assert(playerPut(players_map_1,player3_id, player3_stats) == MAP_SUCCESS);
-    assert(playerRemove(players_map_1, player3_id) == MAP_SUCCESS);
+    assert(playersMapPut(players_map_1,player3_id, player3_stats) == MAP_SUCCESS);
+    assert(playersMapRemove(players_map_1, player3_id) == MAP_SUCCESS);
     playerStatsDestroy(player3_stats);
 
     int tournament2_id = 22222222;
     int max_games_per_tournament_2 = 1;
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament2_id, game1_id, max_games_per_tournament_2) == GAME_STATS_ADD_SUCCESS);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament2_id, game1_id, max_games_per_tournament_2) == GAME_STATS_ADD_SUCCESS);
     assert(playerStatsSearchForTournament(player1_stats,tournament1_id) == true);
     int tournament3_id = 33333333;
     int max_games_per_tournament_3 = 3;
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament3_id, game4_id, max_games_per_tournament_3) == GAME_STATS_ADD_SUCCESS);
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament3_id, game1_id, max_games_per_tournament_3) == GAME_STATS_ADD_SUCCESS);
-    assert (addGameStatsToPlayerStats(players_map_1, player1_id , tournament3_id, game3_id, max_games_per_tournament_3) == GAME_STATS_ADD_SUCCESS);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament3_id, game4_id, max_games_per_tournament_3) == GAME_STATS_ADD_SUCCESS);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament3_id, game1_id, max_games_per_tournament_3) == GAME_STATS_ADD_SUCCESS);
+    assert (playersMapAddGameStats(players_map_1, player1_id , tournament3_id, game3_id, max_games_per_tournament_3) == GAME_STATS_ADD_SUCCESS);
     assert(playerStatsSearchForTournament(player1_stats,tournament1_id) == true);
     assert(playerStatsSearchForTournament(player1_stats,tournament2_id) == true);
     assert(playerStatsSearchForTournament(player1_stats,tournament3_id) == true);
 
     //CHECK FOREACH BEHAVIOR
     int* player1_tournaments = NULL;
-    player1_tournaments = playerGetTournaments(players_map_1, player1_id);
+    player1_tournaments = playersMapGetTournaments(players_map_1, player1_id);
     if (!(player1_tournaments == NULL))
     {
         int num_of_tournaments_player1 = 0;
@@ -90,8 +90,8 @@ void test_of_players_map()
         //printf("Num of tournaments of player 1: %d\n", num_of_tournaments_player1);
         for (i = 0; i < num_of_tournaments_player1; i++)
         {
-            int num_of_games_per_tournament = playerGetMaxGamesForTournament(players_map_1,player1_id, player1_tournaments[i]);
-            int *player1_games = playerGetGamesInTournament(players_map_1, player1_id, player1_tournaments[i]);
+            int num_of_games_per_tournament = playersMapGetMaxGamesForTournament(players_map_1,player1_id, player1_tournaments[i]);
+            int *player1_games = playersMapGetGamesInTournament(players_map_1, player1_id, player1_tournaments[i]);
             if (!(player1_games == NULL))
             {
                 for (int j = 0; j < num_of_games_per_tournament; j++)
@@ -104,9 +104,9 @@ void test_of_players_map()
         free(player1_tournaments);
     }
     //printf("\n\n now we remove one:\n");
-    playersRemoveTournamentFromPlayerStats(players_map_1, player1_id, tournament2_id);
+    playersMapRemoveTournament(players_map_1, player1_id, tournament2_id);
 
-    player1_tournaments = playerGetTournaments(players_map_1, player1_id);
+    player1_tournaments = playersMapGetTournaments(players_map_1, player1_id);
     if (!(player1_tournaments == NULL))
     {
         int num_of_tournaments_player1 = 0;
@@ -118,8 +118,8 @@ void test_of_players_map()
         //printf("Num of tournaments of player 1: %d\n", num_of_tournaments_player1);
         for (i = 0; i < num_of_tournaments_player1; i++)
         {
-            int num_of_games_per_tournament = playerGetMaxGamesForTournament(players_map_1,player1_id, player1_tournaments[i]);
-            int *player1_games = playerGetGamesInTournament(players_map_1, player1_id, player1_tournaments[i]);
+            int num_of_games_per_tournament = playersMapGetMaxGamesForTournament(players_map_1,player1_id, player1_tournaments[i]);
+            int *player1_games = playersMapGetGamesInTournament(players_map_1, player1_id, player1_tournaments[i]);
             if (!(player1_games == NULL))
             {
                 for (int j = 0; j < num_of_games_per_tournament; j++)
@@ -139,29 +139,29 @@ void test_of_players_map()
         switch (divider)
         {
             case 0:
-                playerAddWin(players_map_1, player1_id);
+                playersMapAddWin(players_map_1, player1_id);
                 break;
             case 1:
-                playerAddTie(players_map_1, player1_id);
+                playersMapAddTie(players_map_1, player1_id);
                 break;
             case 2:
-                playerAddLose(players_map_1, player1_id);
+                playersMapAddLose(players_map_1, player1_id);
                 break;
             default:
                 break;
         }
     }
-    printf("player 1 wins amount: %d\n", playerGetWins(players_map_1, player1_id));
-    printf("player 1 ties amount: %d\n", playerGetTies(players_map_1, player1_id));
-    printf("player 1 loses amount: %d\n", playerGetLoses(players_map_1, player1_id));
+    printf("player 1 wins amount: %d\n", playersMapGetWins(players_map_1, player1_id));
+    printf("player 1 ties amount: %d\n", playersMapGetTies(players_map_1, player1_id));
+    printf("player 1 loses amount: %d\n", playersMapGetLoses(players_map_1, player1_id));
 
-    playerNullifyStats(players_map_1, player1_id);
+    playersMapNullifyStats(players_map_1, player1_id);
 
-    printf("player 1 wins amount: %d\n", playerGetWins(players_map_1, player1_id));
-    printf("player 1 ties amount: %d\n", playerGetTies(players_map_1, player1_id));
-    printf("player 1 loses amount: %d\n", playerGetLoses(players_map_1, player1_id));
+    printf("player 1 wins amount: %d\n", playersMapGetWins(players_map_1, player1_id));
+    printf("player 1 ties amount: %d\n", playersMapGetTies(players_map_1, player1_id));
+    printf("player 1 loses amount: %d\n", playersMapGetLoses(players_map_1, player1_id));
 
-    assert(playersContain(players_map_1, player1_id) == true);
+    assert(playersMapContain(players_map_1, player1_id) == true);
     playersMapDestroy(players_map_1);
 
 
