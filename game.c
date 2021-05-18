@@ -55,7 +55,7 @@ GameTable gameTableCopy(GameTable game_table)
     return mapCopy(game_table);
 }
 
-GameErrorCode editGameResult(GameTable game_table, int game_id, Winner new_result)
+GameErrorCode editGameResult(GameTable game_table, int game_id, GameResult new_result)
 {
     assert(gameTableContains(game_table, game_id));
     GameData new_game_data= gameGet(game_table, game_id);
@@ -92,7 +92,7 @@ int gameTableSumUpPoints(GameTable game_table, int** player_table, int table_siz
             player_table[ID_COL][current_size] = p2;
             p2_index = current_size++;
         }
-        Winner game_result = gameDataGetResult(game_data);
+        GameResult game_result = gameDataGetResult(game_data);
         if(game_result == FIRST)
         {
             player_table[POINTS_COL][p1_index] += WIN_POINTS;

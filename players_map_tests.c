@@ -155,7 +155,7 @@ void test_of_players_map()
     printf("player 1 ties amount: %d\n", playersMapGetTies(players_map_1, player1_id));
     printf("player 1 loses amount: %d\n", playersMapGetLoses(players_map_1, player1_id));
 
-    playersMapNullifyStats(players_map_1, player1_id);
+    PlayersMapNullifyAllPlayerStats(players_map_1);
 
     printf("player 1 wins amount: %d\n", playersMapGetWins(players_map_1, player1_id));
     printf("player 1 ties amount: %d\n", playersMapGetTies(players_map_1, player1_id));

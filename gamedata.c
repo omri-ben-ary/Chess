@@ -6,12 +6,12 @@
 struct GameData_t{
     int p1;
     int p2;
-    Winner result;
+    GameResult result;
     int game_time;
 };
 
 
-GameData gameCreate(int p1, int p2, Winner result, int game_time)
+GameData gameCreate(int p1, int p2, GameResult result, int game_time)
 {
 
     GameData game = malloc(sizeof(*game));
@@ -57,7 +57,7 @@ void gameDestroy(GameData game)
     free(game);
 }
 
-void changeGameResult(GameData game, Winner new_result)
+void changeGameResult(GameData game, GameResult new_result)
 {
     game->result = new_result;
 }
@@ -81,7 +81,7 @@ int gameDataGetPlayer(GameData game, int player)
     return game->p2;
 }
 
-Winner gameDataGetResult(GameData game)
+GameResult gameDataGetResult(GameData game)
 {
     return game->result;
 }

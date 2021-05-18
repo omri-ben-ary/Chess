@@ -13,6 +13,7 @@
 #include "chessSystem.h"
 #include "players_map.h"
 #include "assert.h"
+#include "tournament.h"
 // OMRI should add his header files here
 
 #define ERROR_CODE (-1)
@@ -29,6 +30,7 @@
 
 struct chess_system_t{
     Players players;
+    TournamentTable tournament_table;
     // OMRI should add Tournaments here
 };
 
@@ -51,6 +53,32 @@ static double* chessCalculateAndSortRankings(Players players, int n);
 static ChessResult chessPrintRankingsToFile(double a[], int n, FILE* file);
 
 // FUNCTIONS IMPLEMENTATION (STATIC FUNCTIONS (HELPERS) BEFORE THE FUNCTION THEY RELATE TO):
+
+ChessSystem chessCreate()
+{
+    ChessSystem chess = malloc(sizeof(*chess));
+    if(chess == NULL)
+    {
+        return NULL;
+    }
+    chess->players = playersMapCreate();
+    if(chess->players == NULL)
+    {
+        return NULL;
+    }
+    chess->tournament_table = tournamentTableCreate();
+    if(chess->tournament_table == NULL)
+    {
+        return NULL;
+    }
+    return chess;
+}
+
+void chessDestroy(ChessSystem chess)
+{
+    playersMapDestroy(chess->players);
+    tournamentTableDestroy(chess->tournament_table);
+}
 
 static bool chessContainPlayer(ChessSystem chess, int player_id)
 {
@@ -208,7 +236,7 @@ static ChessResult chessUpdatePlayerStats(ChessSystem chess)
                 {
                     break;
                 }
-                int game_result = tournamentGetPlayerResult(tournament, player_tournaments[i], player_games[j], *player_id); // OMRI
+                int game_result = tournamentGetPlayerResult(chess->tournament_table, player_tournaments[i], player_games[j], *player_id); // OMRI
                 chessUpdatePlayerWithGameResult(chess->players, *player_id, game_result);
             }
             free(player_games);
@@ -339,7 +367,7 @@ ChessResult chessSavePlayersLevels (ChessSystem chess, FILE* file) {
     {
         return chess_result;
     }
-    int n = tournametTableGetNumberOfGames(tournament); // OMRI
+    int n = tournamentTableGetNumberOfGames(chess->tournament_table); // OMRI
     double *ratings_array = chessCalculateAndSortRankings(chess->players, n);
     PlayersMapNullifyAllPlayerStats(chess->players); // should think if it's cool that it's void (might be an issue inside)
     chess_result = chessPrintRankingsToFile(ratings_array, SIZE_OF_PAIR*n, file);

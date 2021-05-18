@@ -50,7 +50,7 @@ TournamentErrorCode tournamentDelete(TournamentTable tournament_table, Tournamen
 }
 
 TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, TournamentId tournament_id,
-                                           int first_player, int second_player, Winner winner, int play_time)
+                                           int first_player, int second_player, GameResult winner, int play_time)
 {
     GameData game_data = gameCreate(first_player,second_player,winner,play_time);
     if(game_data == NULL)
@@ -83,12 +83,12 @@ TournamentErrorCode tournamentGameRemovePlayer(TournamentTable tournament_table,
     GameData game_data = gameGet(game_table, game_id);
     if(player_id == gameDataGetPlayer(game_data, PLAYER1))
     {
-        if(gameDataGetResult(game_data) == FIRST || gameDataGetResult(game_data) == DRAW)
+        if(gameDataGetResult(game_data) == FIRST || gameDataGetResult(game_data) == GAME_DRAW)
         {
             editGameResult(game_table, game_id, SECOND);
         }
     } else {
-        if(gameDataGetResult(game_data) == SECOND || gameDataGetResult(game_data) == DRAW)
+        if(gameDataGetResult(game_data) == SECOND || gameDataGetResult(game_data) == GAME_DRAW)
         {
             editGameResult(game_table, game_id, FIRST);
         }
@@ -166,8 +166,8 @@ int tournamentGetPlayerResult(TournamentTable tournament_table, TournamentId tou
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
     assert(gameTableContains(game_table, game_id));
     GameData game_data = gameGet(game_table, game_id);
-    Winner result = gameDataGetResult(game_data);
-    if(result == DRAW)
+    GameResult result = gameDataGetResult(game_data);
+    if(result == GAME_DRAW)
     {
         return PLAYER_DRAW;
     }

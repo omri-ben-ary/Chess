@@ -77,7 +77,7 @@ TournamentErrorCode tournamentDelete(TournamentTable tournament_table, Tournamen
  * @return Map error codes
  */
 TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, TournamentId tournament_id,
-                                           int first_player, int second_player, Winner winner, int play_time);
+                                           int first_player, int second_player, GameResult winner, int play_time);
 
 /**
  *

@@ -9,8 +9,8 @@
 typedef enum {
     FIRST,
     SECOND,
-    DRAW
-}Winner;
+    GAME_DRAW
+}GameResult;
 
 /**value type of map**/
 typedef struct GameData_t *GameData;
@@ -23,7 +23,7 @@ typedef struct GameData_t *GameData;
  * @param game_time - games total time
  * @return
  */
-GameData gameCreate(int p1, int p2, Winner result, int game_time);
+GameData gameCreate(int p1, int p2, GameResult result, int game_time);
 
 /**
  *
@@ -44,7 +44,7 @@ GameData gameDataCopy(GameData src_data);
  * @param game - game data to change
  * @param new_result - new result to enter
  */
-void changeGameResult(GameData game, Winner new_result);
+void changeGameResult(GameData game, GameResult new_result);
 
 /**
  *
@@ -65,7 +65,7 @@ int gameDataGetPlayer(GameData game, int player);
  * @param game - game to get data from
  * @return - game result enum
  */
-Winner gameDataGetResult(GameData game);
+GameResult gameDataGetResult(GameData game);
 
 /**
  *

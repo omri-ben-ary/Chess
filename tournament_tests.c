@@ -40,7 +40,7 @@ void runTournamentsTest()
         avg_check += (i+1)*10;
         assert(tournamentTableAddGame(tournament_table, 7, player_ids[i], player_ids[i+1], FIRST, (i+1)*10) == MAP_SUCCESS);
         assert(tournamentTableAddGame(tournament_table, 8, player_ids[i], player_ids[i+1], SECOND, (i+1)*10) == MAP_SUCCESS);
-        assert(tournamentTableAddGame(tournament_table, 9, player_ids[i], player_ids[i+1], DRAW, (i+1)*10) == MAP_SUCCESS);
+        assert(tournamentTableAddGame(tournament_table, 9, player_ids[i], player_ids[i+1], GAME_DRAW, (i+1)*10) == MAP_SUCCESS);
     }
     avg_check /= TEST_LEN;
     assert(tournamentDataGetLongestGame(tournamentTableGetData(tournament_table, 7)) == 250);
@@ -71,7 +71,7 @@ void runTournamentsTest()
 
     int winner_id = 0;
     int num_of_players = 0;
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[1], DRAW, 10) == MAP_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[1], GAME_DRAW, 10) == MAP_SUCCESS);
     assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[2], FIRST, 10) == MAP_SUCCESS);
     assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[2], FIRST, 10) == MAP_SUCCESS);
     assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[3], SECOND, 10) == MAP_SUCCESS);
@@ -79,10 +79,10 @@ void runTournamentsTest()
     assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[4], FIRST, 10) == MAP_SUCCESS);
     assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[4], FIRST, 10) == MAP_SUCCESS);
     assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[5], FIRST, 10) == MAP_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[5], DRAW, 10) == MAP_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[6], DRAW, 11) == MAP_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[5], GAME_DRAW, 10) == MAP_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[6], GAME_DRAW, 11) == MAP_SUCCESS);
     assert(tournamentTableAddGame(tournament_table, 1, player_ids[3], player_ids[4], FIRST, 10) == MAP_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[3], player_ids[5], DRAW, 10) == MAP_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[3], player_ids[5], GAME_DRAW, 10) == MAP_SUCCESS);
     assert(tournamentEnd(tournament_table, 1, &winner_id, &num_of_players) == MAP_SUCCESS);
     assert(winner_id == player_ids[3]);
 

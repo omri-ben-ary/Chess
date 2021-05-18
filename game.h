@@ -88,7 +88,7 @@ GameTable gameTableCopy(GameTable game_table);
  * @param game_id - game id
  * @param new_result - new result of the game
  */
-GameErrorCode editGameResult(GameTable game_table, int game_id, Winner new_result);
+GameErrorCode editGameResult(GameTable game_table, int game_id, GameResult new_result);
 
 /**
  *
