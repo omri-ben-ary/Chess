@@ -23,13 +23,13 @@ typedef struct GameData_t *GameData;
  * @param game_time - games total time
  * @return
  */
-GameData gameCreate(int p1, int p2, GameResult result, int game_time);
+GameData gameDataCreate(int p1, int p2, GameResult result, int game_time);
 
 /**
  *
  * @param game - game to destroy
  */
-void gameDestroy(GameData game);
+void gameDataDestroy(GameData game);
 
 /**
  *
@@ -44,7 +44,7 @@ GameData gameDataCopy(GameData src_data);
  * @param game - game data to change
  * @param new_result - new result to enter
  */
-void changeGameResult(GameData game, GameResult new_result);
+void gameDataChangeGameResult(GameData game, GameResult new_result);
 
 /**
  *

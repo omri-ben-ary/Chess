@@ -62,7 +62,7 @@ bool gameTableContains(GameTable game_table, int game_id);
  * @param data - game data
  * @return - Map error codes if anything failed
  */
-GameErrorCode gameAddOrEdit(GameTable game_table, int game_id, GameData data);
+GameErrorCode gameTableAddOrEditGame(GameTable game_table, int game_id, GameData data);
 
 /**
  *
@@ -72,7 +72,7 @@ GameErrorCode gameAddOrEdit(GameTable game_table, int game_id, GameData data);
  *      NULL if the game table is NULL or the game id wasn't found
  *      otherwise return the game data
  */
-GameData gameGet(GameTable game_table, int game_id);
+GameData gameTableGetGameData(GameTable game_table, int game_id);
 
 /**
  *
@@ -88,7 +88,7 @@ GameTable gameTableCopy(GameTable game_table);
  * @param game_id - game id
  * @param new_result - new result of the game
  */
-GameErrorCode editGameResult(GameTable game_table, int game_id, GameResult new_result);
+GameErrorCode gameTableEditGameResult(GameTable game_table, int game_id, GameResult new_result);
 
 /**
  *
@@ -97,7 +97,7 @@ GameErrorCode editGameResult(GameTable game_table, int game_id, GameResult new_r
  * @param player_id - player id to delete
  * @return Map error codes
  */
-GameErrorCode gameDeletePlayer(GameTable game_table, int game_id, int player_id);
+GameErrorCode gameTableDeletePlayerInGame(GameTable game_table, int game_id, int player_id);
 
 /**
  *

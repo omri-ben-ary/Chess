@@ -11,7 +11,7 @@ struct GameData_t{
 };
 
 
-GameData gameCreate(int p1, int p2, GameResult result, int game_time)
+GameData gameDataCreate(int p1, int p2, GameResult result, int game_time)
 {
 
     GameData game = malloc(sizeof(*game));
@@ -48,7 +48,7 @@ GameData gameDataCopy(GameData src_data)
     return copy_game;
 }
 
-void gameDestroy(GameData game)
+void gameDataDestroy(GameData game)
 {
     if(game == NULL)
     {
@@ -57,7 +57,7 @@ void gameDestroy(GameData game)
     free(game);
 }
 
-void changeGameResult(GameData game, GameResult new_result)
+void gameDataChangeGameResult(GameData game, GameResult new_result)
 {
     game->result = new_result;
 }

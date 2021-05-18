@@ -17,7 +17,7 @@ static MapDataElement copyGameData(MapDataElement data);
 static void freeGameId(MapKeyElement game_id);
 static void freeGameData(MapKeyElement data);
 static int compareGameId(MapKeyElement game_id1, MapKeyElement game_id2);
-static int findPlayerIndex(int** player_table, int player_id, int table_size);
+static int gameTableFindPlayerIndex(int** player_table, int player_id, int table_size);
 
 GameTable gameTableCreate()
 {
@@ -40,12 +40,12 @@ bool gameTableContains(GameTable game_table, int game_id)
     return mapContains(game_table, &game_id);
 }
 
-GameErrorCode gameAddOrEdit(GameTable game_table, int game_id, GameData data)
+GameErrorCode gameTableAddOrEditGame(GameTable game_table, int game_id, GameData data)
 {
     return mapPut(game_table, &game_id, data);
 }
 
-GameData gameGet(GameTable game_table, int game_id)
+GameData gameTableGetGameData(GameTable game_table, int game_id)
 {
     return mapGet(game_table, &game_id);
 }
@@ -55,20 +55,20 @@ GameTable gameTableCopy(GameTable game_table)
     return mapCopy(game_table);
 }
 
-GameErrorCode editGameResult(GameTable game_table, int game_id, GameResult new_result)
+GameErrorCode gameTableEditGameResult(GameTable game_table, int game_id, GameResult new_result)
 {
     assert(gameTableContains(game_table, game_id));
-    GameData new_game_data= gameGet(game_table, game_id);
-    changeGameResult(new_game_data, new_result);
-    return gameAddOrEdit(game_table, game_id, new_game_data);
+    GameData new_game_data= gameTableGetGameData(game_table, game_id);
+    gameDataChangeGameResult(new_game_data, new_result);
+    return gameTableAddOrEditGame(game_table, game_id, new_game_data);
 }
 
-GameErrorCode gameDeletePlayer(GameTable game_table, int game_id, int player_id)
+GameErrorCode gameTableDeletePlayerInGame(GameTable game_table, int game_id, int player_id)
 {
     assert(gameTableContains(game_table, game_id));
-    GameData game_data = gameGet(game_table, game_id);
+    GameData game_data = gameTableGetGameData(game_table, game_id);
     gameDataDeletePlayer(game_data, player_id);
-    return gameAddOrEdit(game_table, game_id, game_data);
+    return gameTableAddOrEditGame(game_table, game_id, game_data);
 }
 
 
@@ -77,16 +77,16 @@ int gameTableSumUpPoints(GameTable game_table, int** player_table, int table_siz
     int current_size = 0;
     MAP_FOREACH(int*, iterator, game_table) {
         assert(gameTableContains(game_table, *iterator));
-        GameData game_data = gameGet(game_table, *iterator);
+        GameData game_data = gameTableGetGameData(game_table, *iterator);
         int p1 = gameDataGetPlayer(game_data, PLAYER1);
         int p2 = gameDataGetPlayer(game_data, PLAYER2);
-        int p1_index = findPlayerIndex(player_table, p1, table_size);
+        int p1_index = gameTableFindPlayerIndex(player_table, p1, table_size);
         if(p1_index == PLAYER_NOT_FOUND)
         {
             player_table[ID_COL][current_size] = p1;
             p1_index = current_size++;
         }
-        int p2_index = findPlayerIndex(player_table, p2, table_size);
+        int p2_index = gameTableFindPlayerIndex(player_table, p2, table_size);
         if(p2_index == PLAYER_NOT_FOUND)
         {
             player_table[ID_COL][current_size] = p2;
@@ -112,7 +112,7 @@ int gameTableSumUpPoints(GameTable game_table, int** player_table, int table_siz
     return current_size;
 }
 
-static int findPlayerIndex(int** player_table, int player_id, int table_size)
+static int gameTableFindPlayerIndex(int** player_table, int player_id, int table_size)
 {
     int i=0;
     for (;i<table_size;i++)
@@ -157,7 +157,7 @@ static void freeGameId(MapKeyElement game_id)
 
 static void freeGameData(MapKeyElement data)
 {
-    gameDestroy(data);
+    gameDataDestroy(data);
 }
 
 static int compareGameId(MapKeyElement game_id1, MapKeyElement game_id2)

@@ -47,7 +47,7 @@ bool tournamentTableContains(TournamentTable tournament_table, TournamentId tour
  * @param tournament_data - tournament data of tournament
  * @return Map error codes
  */
-TournamentErrorCode tournamentAddOrEdit(TournamentTable tournament_table, TournamentId tournament_id,
+TournamentErrorCode tournamentTableAddOrEditTournament(TournamentTable tournament_table, TournamentId tournament_id,
                                         TournamentData tournament_data);
 
 /**
@@ -56,7 +56,7 @@ TournamentErrorCode tournamentAddOrEdit(TournamentTable tournament_table, Tourna
  * @param tournament_id - tournament id to retrieve data from
  * @return tournament's data
  */
-TournamentData tournamentTableGetData(TournamentTable tournament_table, TournamentId tournament_id);
+TournamentData tournamentTableGetTournamentData(TournamentTable tournament_table, TournamentId tournament_id);
 
 /**
  *
@@ -64,7 +64,7 @@ TournamentData tournamentTableGetData(TournamentTable tournament_table, Tourname
  * @param tournament_id - tournament id to remove
  * @return Map error codes
  */
-TournamentErrorCode tournamentDelete(TournamentTable tournament_table, TournamentId tournament_id);
+TournamentErrorCode tournamentTableDeleteTournament(TournamentTable tournament_table, TournamentId tournament_id);
 
 /**
  *
@@ -87,7 +87,7 @@ TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, Tou
  * @param player_id - player id to remove
  * @return Map error codes
  */
-TournamentErrorCode tournamentGameRemovePlayer(TournamentTable tournament_table, TournamentId tournament_id,
+TournamentErrorCode tournamentTableRemovePlayerInGame(TournamentTable tournament_table, TournamentId tournament_id,
                                                int game_id,int player_id);
 
 /**
@@ -98,8 +98,8 @@ TournamentErrorCode tournamentGameRemovePlayer(TournamentTable tournament_table,
  * @param num_of_players - number of players is returned as a pointer
  * @return Map error codes
  */
-TournamentErrorCode tournamentEnd(TournamentTable tournament_table, TournamentId tournament_id, int* winner_id,
-                                  int* num_of_players);
+TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id,
+                                                 int* winner_id,int* num_of_players);
 
 /**
  *
@@ -108,7 +108,7 @@ TournamentErrorCode tournamentEnd(TournamentTable tournament_table, TournamentId
  * @param game_id -game id to address
  * @return game time of game
  */
-int tournamentGetGameTime(TournamentTable tournament_table, TournamentId tournament_id, int game_id);
+int tournamentTableGetGameTime(TournamentTable tournament_table, TournamentId tournament_id, int game_id);
 
 /**
  *
@@ -118,8 +118,8 @@ int tournamentGetGameTime(TournamentTable tournament_table, TournamentId tournam
  * @param winner - player id of the winner
  * @return Map error codes
  */
-TournamentErrorCode tournamentGetStats(TournamentTable tournament_table, TournamentId tournament_id, char* path_file,
-                                       int winner, int num_of_players);
+TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tournament_table, TournamentId tournament_id,
+                                                        char* path_file,int winner, int num_of_players);
 
 /**
  *
@@ -129,7 +129,7 @@ TournamentErrorCode tournamentGetStats(TournamentTable tournament_table, Tournam
  * @param player_id - player to check result
  * @return PLAYER_WIN if player won, PLAYER_LOSE if player lost, PLAYER_DRAW if the result is draw
  */
-int tournamentGetPlayerResult(TournamentTable tournament_table, TournamentId tournament_id, int game_id,
+int tournamentTableGetPlayerResultInGame(TournamentTable tournament_table, TournamentId tournament_id, int game_id,
                                  int player_id);
 
 /**

@@ -9,17 +9,17 @@
 
 #define PLAYERS_PER_GAME 2
 
-static MapDataElement copy_tournament_data(MapDataElement tournament_data);
-static MapKeyElement copy_tournament_id(MapKeyElement tournament_id);
-static void free_tournament_data(MapDataElement tournament_data);
-static void free_tournament_id(MapKeyElement tournament_id);
-static int compare_tournament_id(MapKeyElement tournament_id1, MapKeyElement tournament_id2);
-static int tournamentFindWinner(int** player_table, int game_table_size);
+static MapDataElement copyTournamentData(MapDataElement tournament_data);
+static MapKeyElement copyTournamentId(MapKeyElement tournament_id);
+static void freeTournamentData(MapDataElement tournament_data);
+static void freeTournamentId(MapKeyElement tournament_id);
+static int compareTournamentId(MapKeyElement tournament_id1, MapKeyElement tournament_id2);
+static int tournamentTableFindWinnerInTournament(int** player_table, int game_table_size);
 
 TournamentTable tournamentTableCreate()
 {
-    return mapCreate(copy_tournament_data,copy_tournament_id,free_tournament_data,free_tournament_id,
-                     compare_tournament_id);
+    return mapCreate(copyTournamentData,copyTournamentId,freeTournamentData,freeTournamentId,
+                     compareTournamentId);
 }
 
 void tournamentTableDestroy(TournamentTable tournament_table)
@@ -33,18 +33,18 @@ bool tournamentTableContains(TournamentTable tournament_table, TournamentId tour
     return mapContains(tournament_table, &tournament_id);
 }
 
-TournamentErrorCode tournamentAddOrEdit(TournamentTable tournament_table, TournamentId tournament_id,
+TournamentErrorCode tournamentTableAddOrEditTournament(TournamentTable tournament_table, TournamentId tournament_id,
                                         TournamentData tournament_data)
 {
     return mapPut(tournament_table, &tournament_id, tournament_data);
 }
 
-TournamentData tournamentTableGetData(TournamentTable tournament_table, TournamentId tournament_id)
+TournamentData tournamentTableGetTournamentData(TournamentTable tournament_table, TournamentId tournament_id)
 {
     return mapGet(tournament_table, &tournament_id);
 }
 
-TournamentErrorCode tournamentDelete(TournamentTable tournament_table, TournamentId tournament_id)
+TournamentErrorCode tournamentTableDeleteTournament(TournamentTable tournament_table, TournamentId tournament_id)
 {
     return mapRemove(tournament_table,&tournament_id);
 }
@@ -52,12 +52,12 @@ TournamentErrorCode tournamentDelete(TournamentTable tournament_table, Tournamen
 TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, TournamentId tournament_id,
                                            int first_player, int second_player, GameResult winner, int play_time)
 {
-    GameData game_data = gameCreate(first_player,second_player,winner,play_time);
+    GameData game_data = gameDataCreate(first_player,second_player,winner,play_time);
     if(game_data == NULL)
     {
         return MAP_OUT_OF_MEMORY;
     }
-    TournamentData tournament_data = tournamentTableGetData(tournament_table, tournament_id);
+    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
     assert(tournament_data != NULL);
     if(play_time > tournamentDataGetLongestGame(tournament_data))
     {
@@ -66,40 +66,40 @@ TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, Tou
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
     assert(game_table != NULL);
     int game_id = tournamentDataGetGameIndex(tournament_data);
-    TournamentErrorCode error_code = gameAddOrEdit(game_table, game_id, game_data);
+    TournamentErrorCode error_code = gameTableAddOrEditGame(game_table, game_id, game_data);
     tournamentDataSetAverageGameTime(tournament_data, play_time);
-    gameDestroy(game_data);
+    gameDataDestroy(game_data);
     return error_code;
 }
 
-TournamentErrorCode tournamentGameRemovePlayer(TournamentTable tournament_table, TournamentId tournament_id, int game_id,
-                                     int player_id)
+TournamentErrorCode tournamentTableRemovePlayerInGame(TournamentTable tournament_table, TournamentId tournament_id,
+                                                      int game_id,int player_id)
 {
-    TournamentData tournament_data = tournamentTableGetData(tournament_table, tournament_id);
+    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
     assert(tournament_data != NULL);
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
     assert(game_table != NULL);
     assert(gameTableContains(game_table, game_id));
-    GameData game_data = gameGet(game_table, game_id);
+    GameData game_data = gameTableGetGameData(game_table, game_id);
     if(player_id == gameDataGetPlayer(game_data, PLAYER1))
     {
         if(gameDataGetResult(game_data) == FIRST || gameDataGetResult(game_data) == GAME_DRAW)
         {
-            editGameResult(game_table, game_id, SECOND);
+            gameTableEditGameResult(game_table, game_id, SECOND);
         }
     } else {
         if(gameDataGetResult(game_data) == SECOND || gameDataGetResult(game_data) == GAME_DRAW)
         {
-            editGameResult(game_table, game_id, FIRST);
+            gameTableEditGameResult(game_table, game_id, FIRST);
         }
     }
-    return gameDeletePlayer(game_table, game_id, player_id);
+    return gameTableDeletePlayerInGame(game_table, game_id, player_id);
 }
 
-TournamentErrorCode tournamentEnd(TournamentTable tournament_table, TournamentId tournament_id, int* winner_id,
-                                  int* num_of_players)
+TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id,
+                                                 int* winner_id,int* num_of_players)
 {
-    TournamentData tournament_data = tournamentTableGetData(tournament_table, tournament_id);
+    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
     int game_table_size = PLAYERS_PER_GAME * gameTableGetSize(game_table);
     int* player_table [STANDINGS_DATA];
@@ -119,7 +119,7 @@ TournamentErrorCode tournamentEnd(TournamentTable tournament_table, TournamentId
         }
     }
     *num_of_players = gameTableSumUpPoints(game_table, player_table, game_table_size);
-    *winner_id = tournamentFindWinner(player_table, game_table_size);
+    *winner_id = tournamentTableFindWinnerInTournament(player_table, game_table_size);
     for(int i=0; i<STANDINGS_DATA; i++)
     {
         free(player_table[i]);
@@ -127,15 +127,15 @@ TournamentErrorCode tournamentEnd(TournamentTable tournament_table, TournamentId
     return MAP_SUCCESS;
 }
 
-TournamentErrorCode tournamentGetStats(TournamentTable tournament_table, TournamentId tournament_id, char* path_file,
-                                       int winner, int num_of_players)
+TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tournament_table, TournamentId tournament_id,
+                                                        char* path_file,int winner, int num_of_players)
 {
     FILE* tournament_stats = fopen(path_file, "w"); //name check
     if(tournament_stats == NULL)
     {
         return MAP_OUT_OF_MEMORY;
     }
-    TournamentData tournament_data = tournamentTableGetData(tournament_table, tournament_id);
+    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
     int tournament_num_of_games = gameTableGetSize(game_table);
     assert(tournament_num_of_games != UNDEFINED_SIZE);
@@ -150,22 +150,22 @@ TournamentErrorCode tournamentGetStats(TournamentTable tournament_table, Tournam
     return MAP_SUCCESS;
 }
 
-int tournamentGetGameTime(TournamentTable tournament_table, TournamentId tournament_id, int game_id)
+int tournamentTableGetGameTime(TournamentTable tournament_table, TournamentId tournament_id, int game_id)
 {
-    TournamentData tournament_data = tournamentTableGetData(tournament_table, tournament_id);
+    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
     assert(gameTableContains(game_table, game_id));
-    GameData  game_data = gameGet(game_table,game_id);
+    GameData  game_data = gameTableGetGameData(game_table,game_id);
     return gameDataGetGameTime(game_data);
 }
 
-int tournamentGetPlayerResult(TournamentTable tournament_table, TournamentId tournament_id, int game_id,
+int tournamentTableGetPlayerResultInGame(TournamentTable tournament_table, TournamentId tournament_id, int game_id,
                               int player_id)
 {
-    TournamentData tournament_data = tournamentTableGetData(tournament_table, tournament_id);
+    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
     assert(gameTableContains(game_table, game_id));
-    GameData game_data = gameGet(game_table, game_id);
+    GameData game_data = gameTableGetGameData(game_table, game_id);
     GameResult result = gameDataGetResult(game_data);
     if(result == GAME_DRAW)
     {
@@ -194,7 +194,7 @@ int tournamentTableGetNumberOfGames(TournamentTable tournament_table)
 {
     int games = 0;
     MAP_FOREACH(int *, iterator, tournament_table){
-        TournamentData tournament_data = tournamentTableGetData(tournament_table, *iterator);
+        TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, *iterator);
         GameTable game_table = tournamentDataGetGameTable(tournament_data);
         int games_in_tournament = gameTableGetSize(game_table);
         assert(games_in_tournament != UNDEFINED_SIZE);
@@ -204,7 +204,7 @@ int tournamentTableGetNumberOfGames(TournamentTable tournament_table)
     return games;
 }
 
-static int tournamentFindWinner(int** player_table, int game_table_size)
+static int tournamentTableFindWinnerInTournament(int** player_table, int game_table_size)
 {
     int max_points = 0;
     for(int i=0; i<game_table_size; i++)
@@ -242,7 +242,7 @@ static int tournamentFindWinner(int** player_table, int game_table_size)
     }
     return winner_id;
 }
-static MapDataElement copy_tournament_data(MapDataElement tournament_data)
+static MapDataElement copyTournamentData(MapDataElement tournament_data)
 {
     if(tournament_data == NULL)
     {
@@ -252,7 +252,7 @@ static MapDataElement copy_tournament_data(MapDataElement tournament_data)
     return tournamentDataCopy(tournament_data);
 }
 
-static MapKeyElement copy_tournament_id(MapKeyElement tournament_id)
+static MapKeyElement copyTournamentId(MapKeyElement tournament_id)
 {
     if(tournament_id == NULL)
     {
@@ -267,7 +267,7 @@ static MapKeyElement copy_tournament_id(MapKeyElement tournament_id)
     return copy_id;
 }
 
-static void free_tournament_data(MapDataElement tournament_data)
+static void freeTournamentData(MapDataElement tournament_data)
 {
     if(tournament_data == NULL)
     {
@@ -276,12 +276,12 @@ static void free_tournament_data(MapDataElement tournament_data)
     tournamentDataDestroy(tournament_data);
 }
 
-static void free_tournament_id(MapKeyElement tournament_id)
+static void freeTournamentId(MapKeyElement tournament_id)
 {
     free(tournament_id);
 }
 
-static int compare_tournament_id(MapKeyElement tournament_id1, MapKeyElement tournament_id2)
+static int compareTournamentId(MapKeyElement tournament_id1, MapKeyElement tournament_id2)
 {
     assert(tournament_id1 != NULL && tournament_id2 != NULL);
     return *(int*)tournament_id1 - *(int*)tournament_id2;
