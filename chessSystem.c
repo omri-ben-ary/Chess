@@ -16,6 +16,7 @@
 #include "tournament.h"
 // OMRI should add his header files here
 
+#define EXIT_CODE 1
 #define ERROR_CODE (-1)
 #define WIN 0
 #define TIE 2
@@ -57,19 +58,22 @@ static ChessResult chessPrintRankingsToFile(double a[], int n, FILE* file);
 ChessSystem chessCreate()
 {
     ChessSystem chess = malloc(sizeof(*chess));
-    if(chess == NULL)
+    if (chess == NULL)
     {
-        return NULL;
+        exit(EXIT_CODE);
     }
     chess->players = playersMapCreate();
-    if(chess->players == NULL)
+    if (chess->players == NULL)
     {
-        return NULL;
+        free(chess);
+        exit(EXIT_CODE);
     }
     chess->tournament_table = tournamentTableCreate();
-    if(chess->tournament_table == NULL)
+    if (chess->tournament_table == NULL)
     {
-        return NULL;
+        playersMapDestroy(chess->players);
+        free(chess);
+        exit(EXIT_CODE);
     }
     return chess;
 }
@@ -78,6 +82,7 @@ void chessDestroy(ChessSystem chess)
 {
     playersMapDestroy(chess->players);
     tournamentTableDestroy(chess->tournament_table);
+    free(chess);
 }
 
 static bool chessContainPlayer(ChessSystem chess, int player_id)
@@ -95,7 +100,7 @@ static ChessResult chessCalculateAveragePlayTimeOrRemovePlayerParametersCheck(Ch
     {
         return CHESS_INVALID_ID;
     }
-    if (chessContainPlayer(chess, player_id))
+    if (!(chessContainPlayer(chess, player_id)))
     {
         return CHESS_PLAYER_NOT_EXIST;
     }
@@ -125,7 +130,8 @@ static double chessCalculateAveragePlayTimeOrRemovePlayer(ChessSystem chess, int
     {
         num_of_player_tournaments++;
     }
-    double average_play_time = 0;
+    double total_play_time = 0;
+    int number_of_games_for_average_game_time = 0;
     for (int i = 0; i < num_of_player_tournaments; i++)
     {
         int *player_games = playersMapGetGamesInTournament(chess->players, player_id, player_tournaments[i]);
@@ -134,11 +140,14 @@ static double chessCalculateAveragePlayTimeOrRemovePlayer(ChessSystem chess, int
             // should think what to return NULL POINTER/ MEMORY FAIL or something else;
             // because it's possible that the chess is not null but one of the players inside it points to null by purpose.
             // in case it's a CHESS_OUT_OF_MEMORY we need to terminate the program.
+            free(player_tournaments);
             return ERROR_CODE;
         }
         int num_of_games = playersMapGetMaxGamesForTournament(chess->players, player_id, player_tournaments[i]);
         if (num_of_games == ERROR_CODE)
         {
+            free(player_tournaments);
+            free(player_games);
             return ERROR_CODE;
         }
         for (int j = 0; j < num_of_games; j++)
@@ -149,36 +158,47 @@ static double chessCalculateAveragePlayTimeOrRemovePlayer(ChessSystem chess, int
             }
            if (chosen_function == REMOVE_PLAYER_ID)
            {
-               // specific code for removing player
-               // i pass him: player_tournaments[i] && player_games[j];
-               // need to check tournament is still alive and then remove player from game and change game stats.
+               MapResult result = tournamentGameRemovePlayer(chess->tournament_table, player_tournaments[i],
+                                                             player_games[j], player_id);
+               assert(result == MAP_SUCCESS);
            }
            if (chosen_function == CALCULATE_AVERAGE_PLAY_TIME)
            {
-               // specific code for calculating average time
-               // i pass him: player_tournaments[i] && player_games[j];
-               // need to check tournament and game are still alive and send me the total time of the game.
+               number_of_games_for_average_game_time++;
+               total_play_time += tournamentGetGameTime(chess->tournament_table,player_tournaments[i],player_games[j]);
            }
         }
         free(player_games);
     }
     free(player_tournaments);
     *chess_result = CHESS_SUCCESS;
-    return average_play_time;
+    return (total_play_time/number_of_games_for_average_game_time);
 }
 
 ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
 {
     ChessResult chess_result; // don't sure about that line, should i malloc it?
     chessCalculateAveragePlayTimeOrRemovePlayer(chess, player_id, &chess_result, CALCULATE_AVERAGE_PLAY_TIME);
-    playersMapRemove(chess->players, player_id);
+    if (chess_result == CHESS_OUT_OF_MEMORY)
+    {
+        chessDestroy(chess);
+        exit(EXIT_CODE); // should check it
+    }
+    if (chess_result == CHESS_SUCCESS)
+    {
+        playersMapRemove(chess->players, player_id);
+    }
     return chess_result;
 }
-
 
 double chessCalculateAveragePlayTime (ChessSystem chess, int player_id, ChessResult* chess_result)
 {
     double result = chessCalculateAveragePlayTimeOrRemovePlayer(chess, player_id, chess_result, REMOVE_PLAYER_ID);
+    if (*chess_result == CHESS_OUT_OF_MEMORY)
+    {
+        chessDestroy(chess);
+        exit(EXIT_CODE); // should check it
+    }
     if (*chess_result != CHESS_SUCCESS) // CHESS_SUCCESS - if average playing time was returned successfully.
     {
         return ERROR_CODE; // from my understanding we can return whatever we want
@@ -206,6 +226,7 @@ static ChessResult chessUpdatePlayerStats(ChessSystem chess)
             // should think what to return NULL POINTER/ MEMORY FAIL or something else;
             // because it's possible that the chess is not null but one of the players inside it points to null by purpose.
             // in case it's a CHESS_OUT_OF_MEMORY we need to terminate the program.
+            free(player_id);
             return CHESS_OUT_OF_MEMORY;
         }
         int num_of_player_tournaments = 0, k = 0;
@@ -213,7 +234,6 @@ static ChessResult chessUpdatePlayerStats(ChessSystem chess)
         {
             num_of_player_tournaments++;
         }
-
         for (int i = 0; i < num_of_player_tournaments; i++)
         {
             int *player_games = playersMapGetGamesInTournament(chess->players, *player_id, player_tournaments[i]);
@@ -222,12 +242,17 @@ static ChessResult chessUpdatePlayerStats(ChessSystem chess)
                 // should think what to return NULL POINTER/ MEMORY FAIL or something else;
                 // because it's possible that the chess is not null but one of the players inside it points to null by purpose.
                 // in case it's a CHESS_OUT_OF_MEMORY we need to terminate the program.
+                free(player_id);
+                free(player_tournaments);
                 return CHESS_OUT_OF_MEMORY;
             }
 
             int num_of_games = playersMapGetMaxGamesForTournament(chess->players, *player_id, player_tournaments[i]);
             if (num_of_games == ERROR_CODE)
             {
+                free(player_id);
+                free(player_tournaments);
+                free(player_games);
                 return CHESS_OUT_OF_MEMORY;
             }
             for (int j = 0; j < num_of_games; j++)
@@ -236,7 +261,8 @@ static ChessResult chessUpdatePlayerStats(ChessSystem chess)
                 {
                     break;
                 }
-                int game_result = tournamentGetPlayerResult(chess->tournament_table, player_tournaments[i], player_games[j], *player_id); // OMRI
+                int game_result = tournamentGetPlayerResult(chess->tournament_table,
+                                                            player_tournaments[i], player_games[j], *player_id);
                 chessUpdatePlayerWithGameResult(chess->players, *player_id, game_result);
             }
             free(player_games);
@@ -318,16 +344,19 @@ static double* chessCalculateAndSortRankings(Players players, int n)
 {
     // we want to return a two list array of id's and levels (after we sort it)
     double *rankings_array = malloc(sizeof(*rankings_array)*2*n);
+    if (rankings_array == NULL)
+    {
+        return NULL;
+    }
     int i = 0;
     MAP_FOREACH (int * ,player_id, players)
     {
         rankings_array[i] = *player_id;
         rankings_array[i+1] = chessCalculatePlayerLevel(players, *player_id, n);
-        i+=SIZE_OF_PAIR;
+        i += SIZE_OF_PAIR;
         free(player_id);
     }
     bubble_sort(rankings_array, n * SIZE_OF_PAIR);
-    // sort equal rankings;
     return rankings_array;
 }
 
@@ -345,17 +374,6 @@ static ChessResult chessPrintRankingsToFile(double a[], int n, FILE* file)
     return CHESS_SUCCESS;
 }
 
-/**
- * chessSavePlayersLevels: prints the rating of all players in the system as
- * explained in the *.pdf
- *
- * @param chess - a chess system. Must be non-NULL.
- * @param file - an open, writable output stream, to which the ratings are printed.
- * @return
- *     CHESS_NULL_ARGUMENT - if chess is NULL.
- *     CHESS_SAVE_FAILURE - if an error occurred while saving.
- *     CHESS_SUCCESS - if the ratings was printed successfully.
- */
 ChessResult chessSavePlayersLevels (ChessSystem chess, FILE* file) {
     ChessResult parameters_check_result = chessSavePlayersLevelsParametersCheck(chess, file);
     if (parameters_check_result != CHESS_SUCCESS)
@@ -363,13 +381,19 @@ ChessResult chessSavePlayersLevels (ChessSystem chess, FILE* file) {
         return parameters_check_result;
     }
     ChessResult chess_result = chessUpdatePlayerStats(chess);
-    if (chess_result != CHESS_SUCCESS)
+    if (chess_result == CHESS_OUT_OF_MEMORY)
     {
-        return chess_result;
+        chessDestroy(chess);
+        exit(EXIT_CODE);
     }
-    int n = tournamentTableGetNumberOfGames(chess->tournament_table); // OMRI
+    int n = tournamentTableGetNumberOfGames(chess->tournament_table);
     double *ratings_array = chessCalculateAndSortRankings(chess->players, n);
-    PlayersMapNullifyAllPlayerStats(chess->players); // should think if it's cool that it's void (might be an issue inside)
+    if (ratings_array == NULL)
+    {
+        chessDestroy(chess);
+        exit(EXIT_CODE);
+    }
+    PlayersMapNullifyAllPlayerStats(chess->players);
     chess_result = chessPrintRankingsToFile(ratings_array, SIZE_OF_PAIR*n, file);
     return chess_result;
 }
