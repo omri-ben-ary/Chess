@@ -192,10 +192,7 @@ int playersMapGetLoses(Players players, PlayerID player_id)
 static void playersMapNullifyStats(Players players, PlayerID player_id) // very very important!!! (to nullify before getting out of the ranking function)
 {
     PlayerStats ptr_to_player_stats = playersMapGetStats(players, player_id);
-    if (ptr_to_player_stats == NULL)
-    {
-        return;
-    }
+    assert (ptr_to_player_stats != NULL);
     playerStatsNullifyStats(ptr_to_player_stats);
 }
 
