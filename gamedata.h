@@ -3,23 +3,14 @@
 
 #include <string.h>
 
-
-/**PlayerId is string id for each player in game**/
-typedef char* PlayerId;
-
+#define PLAYER1 1
+#define PLAYER2 2
 /**Result is an enum of all different turnouts of the game**/
 typedef enum {
-    P1_WIN,
-    P2_WIN,
-    TIE
-}GameResult;
-
-struct GameData_t{
-    PlayerId p1;
-    PlayerId p2;
-    GameResult result;
-    int game_time;
-};
+    FIRST,
+    SECOND,
+    DRAW
+}Winner;
 
 /**value type of map**/
 typedef struct GameData_t *GameData;
@@ -32,7 +23,7 @@ typedef struct GameData_t *GameData;
  * @param game_time - games total time
  * @return
  */
-GameData gameCreate(PlayerId p1, PlayerId p2, GameResult result, int game_time);
+GameData gameCreate(int p1, int p2, Winner result, int game_time);
 
 /**
  *
@@ -46,13 +37,41 @@ void gameDestroy(GameData game);
  * @return if allocation didn't work NULL
  *         otherwise pointer to copy of src_data
  */
-GameData copyData(GameData src_data);
+GameData gameDataCopy(GameData src_data);
 
 /**
  *
  * @param game - game data to change
  * @param new_result - new result to enter
  */
-void changeGameResult(GameData game, GameResult new_result);
+void changeGameResult(GameData game, Winner new_result);
+
+/**
+ *
+ * @param game - game to modify
+ * @param player_id - player to delete
+ */
+void gameDataDeletePlayer(GameData game, int player_id);
+
+/**
+ *
+ * @param game - game to get data from
+ * @return - player id of p1
+ */
+int gameDataGetPlayer(GameData game, int player);
+
+/**
+ *
+ * @param game - game to get data from
+ * @return - game result enum
+ */
+Winner gameDataGetResult(GameData game);
+
+/**
+ *
+ * @param game - game to get data from
+ * @return - game time of game
+ */
+int gameDataGetGameTime(GameData game);
 
 #endif //EX1Q4_GAME_DATA_H
