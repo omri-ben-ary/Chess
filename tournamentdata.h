@@ -13,7 +13,7 @@ typedef struct TournamentData_t *TournamentData;
  * @param max_games_per_player -max games allowed for a player to play in a tournament
  * @return if memory allocation failed NULL, otherwise tournament_data
  */
-TournamentData tournamentDataCreate(GameTable game_table, char* location, int max_games_per_player);
+TournamentData tournamentDataCreate(const char* location, int max_games_per_player);
 
 /**
  *
@@ -83,5 +83,33 @@ GameTable tournamentDataGetGameTable(TournamentData tournament_data);
  * @return - an unused game index
  */
 int tournamentDataGetGameIndex(TournamentData tournament_data);
+
+/**
+ *
+ * @param tournament_data - tournament data to take data from
+ * @return - id of tournament winner
+ */
+int tournamentDataGetWinnerId(TournamentData tournament_data);
+
+/**
+ *
+ * @param tournament_data - tournament data to update
+ * @param winner_id - id of tournament winner
+ */
+void tournamentDataSetWinnerId(TournamentData tournament_data, int winner_id);
+
+/**
+ *
+ * @param tournament_data - tournament data to take data from
+ * @return - number of players in tournament
+ */
+int tournamentDataGetNumberOfPlayers(TournamentData tournament_data);
+
+/**
+ *
+ * @param tournament_data - tournament data to update
+ * @param num_of_players - number of players in tournament
+ */
+void tournamentDataSetNumberOfPlayers(TournamentData tournament_data, int num_of_players);
 
 #endif //CHESS_PROJECT_TOURNAMENT_DATA_H

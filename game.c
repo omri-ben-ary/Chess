@@ -112,6 +112,25 @@ int gameTableSumUpPoints(GameTable game_table, int** player_table, int table_siz
     return current_size;
 }
 
+bool gameTableCheckIfPlayersMetAlready(GameTable game_table, int first_player, int second_player)
+{
+    MAP_FOREACH(int *, iterator, game_table)
+    {
+        GameData game_data = gameTableGetGameData(game_table, *iterator);
+        if(gameDataGetPlayer(game_data, PLAYER1) == first_player ||
+        gameDataGetPlayer(game_data, PLAYER2) == first_player)
+        {
+            if(gameDataGetPlayer(game_data, PLAYER1) == second_player ||
+               gameDataGetPlayer(game_data, PLAYER2) == second_player)
+            {
+                return true;
+            }
+        }
+        free(iterator);
+    }
+    return false;
+}
+
 static int gameTableFindPlayerIndex(int** player_table, int player_id, int table_size)
 {
     int i=0;

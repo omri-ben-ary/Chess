@@ -1,7 +1,3 @@
-//
-// Created by User on 13/05/2021.
-//
-
 #include "tournament.h"
 #include <stdlib.h>
 #include <assert.h>
@@ -52,13 +48,17 @@ TournamentErrorCode tournamentTableDeleteTournament(TournamentTable tournament_t
 TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, TournamentId tournament_id,
                                            int first_player, int second_player, GameResult winner, int play_time)
 {
+    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
+    assert(tournament_data != NULL);
+    if(tournamentDataGetWinnerId(tournament_data) != 0)
+    {
+        return MAP_ERROR;
+    }
     GameData game_data = gameDataCreate(first_player,second_player,winner,play_time);
     if(game_data == NULL)
     {
         return MAP_OUT_OF_MEMORY;
     }
-    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
-    assert(tournament_data != NULL);
     if(play_time > tournamentDataGetLongestGame(tournament_data))
     {
         tournamentDataSetLongestGame(tournament_data, play_time);
@@ -96,11 +96,14 @@ TournamentErrorCode tournamentTableRemovePlayerInGame(TournamentTable tournament
     return gameTableDeletePlayerInGame(game_table, game_id, player_id);
 }
 
-TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id,
-                                                 int* winner_id,int* num_of_players)
+TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id)
 {
     TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
+    if(gameTableGetSize(game_table) == 0)
+    {
+        return MAP_ERROR;
+    }
     int game_table_size = PLAYERS_PER_GAME * gameTableGetSize(game_table);
     int* player_table [STANDINGS_DATA];
     for(int i=0; i<STANDINGS_DATA; i++)
@@ -118,8 +121,10 @@ TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_tabl
             player_table[j][i] = 0;
         }
     }
-    *num_of_players = gameTableSumUpPoints(game_table, player_table, game_table_size);
-    *winner_id = tournamentTableFindWinnerInTournament(player_table, game_table_size);
+    int num_of_players = gameTableSumUpPoints(game_table, player_table, game_table_size);
+    int winner_id = tournamentTableFindWinnerInTournament(player_table, game_table_size);
+    tournamentDataSetNumberOfPlayers(tournament_data, num_of_players);
+    tournamentDataSetWinnerId(tournament_data, winner_id);
     for(int i=0; i<STANDINGS_DATA; i++)
     {
         free(player_table[i]);
@@ -127,25 +132,49 @@ TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_tabl
     return MAP_SUCCESS;
 }
 
-TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tournament_table, TournamentId tournament_id,
-                                                        char* path_file,int winner, int num_of_players)
+TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tournament_table, char* path_file)
 {
-    FILE* tournament_stats = fopen(path_file, "w"); //name check
+    FILE* tournament_stats = fopen(path_file, "w");
     if(tournament_stats == NULL)
     {
         return MAP_OUT_OF_MEMORY;
     }
-    TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, tournament_id);
-    GameTable game_table = tournamentDataGetGameTable(tournament_data);
-    int tournament_num_of_games = gameTableGetSize(game_table);
-    assert(tournament_num_of_games != UNDEFINED_SIZE);
-    fprintf(tournament_stats,"%d\n",winner);
-    fprintf(tournament_stats, "%d\n", tournamentDataGetLongestGame(tournament_data));
-    fprintf(tournament_stats, "%lf\n", tournamentDataGetAverageGameTime(tournament_data));
-    fprintf(tournament_stats, "%s\n", tournamentDataGetLocation(tournament_data));
-    fprintf(tournament_stats, "%d\n", tournament_num_of_games);
-    fprintf(tournament_stats, "%d\n", num_of_players);
+    MAP_FOREACH(int *, iterator, tournament_table) {
+        TournamentData tournament_data = tournamentTableGetTournamentData(tournament_table, *iterator);
+        if(tournamentDataGetWinnerId(tournament_data) == 0)
+        {
+            continue;
+        }
+        GameTable game_table = tournamentDataGetGameTable(tournament_data);
+        int tournament_num_of_games = gameTableGetSize(game_table);
+        assert(tournament_num_of_games != UNDEFINED_SIZE);
+        if (fprintf(tournament_stats, "%d\n", tournamentDataGetWinnerId(tournament_data)) == EOF) {
+            fclose(tournament_stats);
+            return MAP_ERROR;
+        }
 
+        if (fprintf(tournament_stats, "%d\n", tournamentDataGetLongestGame(tournament_data)) == EOF) {
+            fclose(tournament_stats);
+            return MAP_ERROR;
+        }
+        if (fprintf(tournament_stats, "%lf\n", tournamentDataGetAverageGameTime(tournament_data)) == EOF) {
+            fclose(tournament_stats);
+            return MAP_ERROR;
+        }
+        if (fprintf(tournament_stats, "%s\n", tournamentDataGetLocation(tournament_data)) == EOF) {
+            fclose(tournament_stats);
+            return MAP_ERROR;
+        }
+        if (fprintf(tournament_stats, "%d\n", tournament_num_of_games) == EOF) {
+            fclose(tournament_stats);
+            return MAP_ERROR;
+        }
+        if (fprintf(tournament_stats, "%d\n", tournamentDataGetNumberOfPlayers(tournament_data)) == EOF) {
+            fclose(tournament_stats);
+            return MAP_ERROR;
+        }
+        free(iterator);
+    }
     fclose(tournament_stats);
     return MAP_SUCCESS;
 }

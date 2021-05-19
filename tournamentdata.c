@@ -9,15 +9,12 @@ struct TournamentData_t{
     double avg_game_time;
     int max_games_per_player;
     int game_index;
+    int winner_id;
+    int num_of_players;
 };
 
-TournamentData tournamentDataCreate(GameTable game_table, char* location, int max_games_per_player)
+TournamentData tournamentDataCreate(const char* location, int max_games_per_player)
 {
-    if(game_table == NULL)
-    {
-        return NULL;
-    }
-
     TournamentData tournament_data = malloc(sizeof(*tournament_data));
     if(tournament_data == NULL)
     {
@@ -43,6 +40,8 @@ TournamentData tournamentDataCreate(GameTable game_table, char* location, int ma
     tournament_data->longest_game = 0;
     tournament_data->avg_game_time = 0;
     tournament_data->game_index = 1;
+    tournament_data->winner_id = 0;
+    tournament_data->num_of_players = 0;
     return tournament_data;
 }
 
@@ -84,6 +83,8 @@ TournamentData tournamentDataCopy(TournamentData tournament_data)
     copy_tournament_data->longest_game = tournament_data->longest_game;
     copy_tournament_data->max_games_per_player = tournament_data->max_games_per_player;
     copy_tournament_data->game_index = tournament_data->game_index;
+    copy_tournament_data->winner_id = tournament_data->winner_id;
+    copy_tournament_data->num_of_players = tournament_data->num_of_players;
     return copy_tournament_data;
 }
 
@@ -133,4 +134,24 @@ GameTable tournamentDataGetGameTable(TournamentData tournament_data)
 int tournamentDataGetGameIndex(TournamentData tournament_data)
 {
     return tournament_data->game_index++;
+}
+
+int tournamentDataGetWinnerId(TournamentData tournament_data)
+{
+    return tournament_data->winner_id;
+}
+
+void tournamentDataSetWinnerId(TournamentData tournament_data, int winner_id)
+{
+    tournament_data->winner_id = winner_id;
+}
+
+int tournamentDataGetNumberOfPlayers(TournamentData tournament_data)
+{
+    return tournament_data->num_of_players;
+}
+
+void tournamentDataSetNumberOfPlayers(TournamentData tournament_data, int num_of_players)
+{
+    tournament_data->num_of_players = num_of_players;
 }

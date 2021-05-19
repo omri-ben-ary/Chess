@@ -1,5 +1,6 @@
 #include "game.h"
 #include <assert.h>
+#include <stdbool.h>
 void runGameTests()
 {
     GameData game1=gameDataCreate(123456,209540483,FIRST,56);
@@ -10,6 +11,8 @@ void runGameTests()
     assert(gameTableGetSize(game_table) == 0);
     assert(gameTableAddOrEditGame(game_table,game_id,game1) == MAP_SUCCESS);
     assert(gameTableAddOrEditGame(game_table,game_id2,game2) == MAP_SUCCESS);
+    assert(gameTableCheckIfPlayersMetAlready(game_table, 1, 2) == false);
+    assert(gameTableCheckIfPlayersMetAlready(game_table, 123456, 209540483) == true);
     gameDataDestroy(game2);
     assert(gameTableGetSize(game_table) == 2);
     assert(gameTableContains(game_table,game_id) == true);

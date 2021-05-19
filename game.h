@@ -109,5 +109,14 @@ GameErrorCode gameTableDeletePlayerInGame(GameTable game_table, int game_id, int
  */
 int gameTableSumUpPoints(GameTable game_table, int** player_table, int table_size);
 
+/**
+ *
+ * @param game_table - game table to search in
+ * @param first_player - id of the first player
+ * @param second_player - id of the second player
+ * @return true if the players already met and false if not
+ */
+bool gameTableCheckIfPlayersMetAlready(GameTable game_table, int first_player, int second_player);
+
 
 #endif //EX1Q4_GAME_H

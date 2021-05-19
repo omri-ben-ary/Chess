@@ -94,12 +94,9 @@ TournamentErrorCode tournamentTableRemovePlayerInGame(TournamentTable tournament
  *
  * @param tournament_table -tournament table to address
  * @param tournament_id - tournament to end
- * @param winner_id - id of the winner is returned as a pointer
- * @param num_of_players - number of players is returned as a pointer
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id,
-                                                 int* winner_id,int* num_of_players);
+TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id);
 
 /**
  *
@@ -115,11 +112,9 @@ int tournamentTableGetGameTime(TournamentTable tournament_table, TournamentId to
  * @param tournament_table - tournament table in which tournament id is found
  * @param tournament_id - tournament id to calculate stats
  * @param path_file - the path of the output file
- * @param winner - player id of the winner
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tournament_table, TournamentId tournament_id,
-                                                        char* path_file,int winner, int num_of_players);
+TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tournament_table, char* path_file);
 
 /**
  *
