@@ -1,0 +1,4 @@
+/home/mtm/cmake-3.17.0-Linux-x86_64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/omri/mtm/ex1/chess
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/omri/mtm/ex1/chess/cmake-build-debug-remote-host-1
