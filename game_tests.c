@@ -9,8 +9,8 @@ void runGameTests()
     int game_id2=4544654;
     GameTable game_table = gameTableCreate();
     assert(gameTableGetSize(game_table) == 0);
-    assert(gameTableAddOrEditGame(game_table,game_id,game1) == MAP_SUCCESS);
-    assert(gameTableAddOrEditGame(game_table,game_id2,game2) == MAP_SUCCESS);
+    assert(gameTableAddOrEditGame(game_table,game_id,game1) == GAME_SUCCESS);
+    assert(gameTableAddOrEditGame(game_table,game_id2,game2) == GAME_SUCCESS);
     assert(gameTableCheckIfPlayersMetAlready(game_table, 1, 2) == false);
     assert(gameTableCheckIfPlayersMetAlready(game_table, 123456, 209540483) == true);
     gameDataDestroy(game2);
@@ -20,8 +20,8 @@ void runGameTests()
     assert(gameDataGetPlayer(gameTableGetGameData(game_table, game_id),PLAYER2) == 209540483);
     assert(gameDataGetResult(gameTableGetGameData(game_table, game_id)) == FIRST);
     assert(gameDataGetGameTime(gameTableGetGameData(game_table, game_id)) == 56);
-    assert(gameTableEditGameResult(game_table,game_id,SECOND) == MAP_SUCCESS);
-    assert(gameTableDeletePlayerInGame(game_table,game_id,123456) == MAP_SUCCESS);
+    assert(gameTableEditGameResult(game_table,game_id,SECOND) == GAME_SUCCESS);
+    assert(gameTableDeletePlayerInGame(game_table,game_id,123456) == GAME_SUCCESS);
     assert(gameTableGetGameData(game_table, game_id) != game1);
     GameTable copy_game_table = gameTableCopy(game_table);
     assert(gameDataGetPlayer(gameTableGetGameData(copy_game_table, game_id),PLAYER1) == PLAYER_NOT_FOUND);

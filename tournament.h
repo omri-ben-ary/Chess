@@ -15,7 +15,13 @@ typedef Map TournamentTable;
 typedef int TournamentId;
 
 /**Error codes that occur when using Tournament data type**/
-typedef MapResult TournamentErrorCode;
+typedef enum TournamentErrorCode_t{
+    TOURNAMENT_NULL_ARGUMENT,
+    TOURNAMENT_OUT_OF_MEMORY,
+    TOURNAMENT_DOES_NOT_EXIST,
+    TOURNAMENT_SAVE_FAILURE,
+    TOURNAMENT_SUCCESS
+}TournamentError;
 
 /********************************************Functions*****************************************************/
 
@@ -47,7 +53,7 @@ bool tournamentTableContains(TournamentTable tournament_table, TournamentId tour
  * @param tournament_data - tournament data of tournament
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableAddOrEditTournament(TournamentTable tournament_table, TournamentId tournament_id,
+TournamentError tournamentTableAddOrEditTournament(TournamentTable tournament_table, TournamentId tournament_id,
                                         TournamentData tournament_data);
 
 /**
@@ -64,7 +70,7 @@ TournamentData tournamentTableGetTournamentData(TournamentTable tournament_table
  * @param tournament_id - tournament id to remove
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableDeleteTournament(TournamentTable tournament_table, TournamentId tournament_id);
+TournamentError tournamentTableDeleteTournament(TournamentTable tournament_table, TournamentId tournament_id);
 
 /**
  *
@@ -76,7 +82,7 @@ TournamentErrorCode tournamentTableDeleteTournament(TournamentTable tournament_t
  * @param play_time - play time of the game
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, TournamentId tournament_id,
+TournamentError tournamentTableAddGame(TournamentTable tournament_table, TournamentId tournament_id,
                                            int first_player, int second_player, GameResult winner, int play_time);
 
 /**
@@ -87,7 +93,7 @@ TournamentErrorCode tournamentTableAddGame(TournamentTable tournament_table, Tou
  * @param player_id - player id to remove
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableRemovePlayerInGame(TournamentTable tournament_table, TournamentId tournament_id,
+TournamentError tournamentTableRemovePlayerInGame(TournamentTable tournament_table, TournamentId tournament_id,
                                                int game_id,int player_id);
 
 /**
@@ -96,7 +102,7 @@ TournamentErrorCode tournamentTableRemovePlayerInGame(TournamentTable tournament
  * @param tournament_id - tournament to end
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id);
+TournamentError tournamentTableEndTournament(TournamentTable tournament_table, TournamentId tournament_id);
 
 /**
  *
@@ -114,7 +120,7 @@ int tournamentTableGetGameTime(TournamentTable tournament_table, TournamentId to
  * @param path_file - the path of the output file
  * @return Map error codes
  */
-TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tournament_table, char* path_file);
+TournamentError tournamentTableGetStatsOfTournament(TournamentTable tournament_table, char* path_file);
 
 /**
  *
@@ -126,12 +132,5 @@ TournamentErrorCode tournamentTableGetStatsOfTournament(TournamentTable tourname
  */
 int tournamentTableGetPlayerResultInGame(TournamentTable tournament_table, TournamentId tournament_id, int game_id,
                                  int player_id);
-
-/**
- *
- * @param tournament_table - tournament table to calculate in
- * @return number of games in tournament table
- */
-int tournamentTableGetNumberOfGames(TournamentTable tournament_table);
 
 #endif //CHESS_PROJECT_TOURNAMENT_H

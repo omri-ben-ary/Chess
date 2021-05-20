@@ -5,6 +5,7 @@
 
 #define PLAYER1 1
 #define PLAYER2 2
+#define DELETED_PLAYER (-1)
 /**Result is an enum of all different turnouts of the game**/
 typedef enum {
     FIRST,
@@ -73,5 +74,12 @@ GameResult gameDataGetResult(GameData game);
  * @return - game time of game
  */
 int gameDataGetGameTime(GameData game);
+
+/**
+ *
+ * @param game - game to get data from
+ * @return - player id of player even after it was deleted
+ */
+int gameDataGetPrevPlayer(GameData game, int player);
 
 #endif //EX1Q4_GAME_DATA_H

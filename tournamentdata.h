@@ -86,6 +86,12 @@ int tournamentDataGetGameIndex(TournamentData tournament_data);
 
 /**
  *
+ * @param tournament_data - tournament data to update
+ */
+void tournamentDataIncreaseGameIndex(TournamentData tournament_data);
+
+/**
+ *
  * @param tournament_data - tournament data to take data from
  * @return - id of tournament winner
  */
@@ -108,7 +114,7 @@ int tournamentDataGetNumberOfPlayers(TournamentData tournament_data);
 /**
  *
  * @param tournament_data - tournament data to update
- * @param num_of_players - number of players in tournament
+ * @param num_of_players - number of players to set in tournament
  */
 void tournamentDataSetNumberOfPlayers(TournamentData tournament_data, int num_of_players);
 

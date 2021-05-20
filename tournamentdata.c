@@ -1,7 +1,8 @@
 #include "tournamentdata.h"
 #include <stdlib.h>
-#include <assert.h>
+//#include <assert.h>
 #include <string.h>
+
 struct TournamentData_t{
     GameTable game_table;
     char* location;
@@ -133,7 +134,12 @@ GameTable tournamentDataGetGameTable(TournamentData tournament_data)
 
 int tournamentDataGetGameIndex(TournamentData tournament_data)
 {
-    return tournament_data->game_index++;
+    return tournament_data->game_index;
+}
+
+void tournamentDataIncreaseGameIndex(TournamentData tournament_data)
+{
+    tournament_data->game_index++;
 }
 
 int tournamentDataGetWinnerId(TournamentData tournament_data)

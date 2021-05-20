@@ -19,7 +19,11 @@
 typedef Map GameTable;
 
 /**Error codes that occur when using GameTable data type**/
-typedef MapResult GameErrorCode;
+typedef enum GameErrorCode_t{
+    GAME_NULL_ARGUMENT,
+    GAME_OUT_OF_MEMORY,
+    GAME_SUCCESS
+}GameError;
 
 /********************************************Functions*****************************************************/
 
@@ -60,9 +64,13 @@ bool gameTableContains(GameTable game_table, int game_id);
  * @param game_table - game table to add game to.
  * @param game_id - game key
  * @param data - game data
- * @return - Map error codes if anything failed
+ * @return
+ * 	GAME_NULL_ARGUMENT if a NULL was sent as map or keyElement or dataElement
+ * 	GAME_OUT_OF_MEMORY if an allocation failed (Meaning the function for copying
+ * 	an element or a key failed)
+ * 	GAME_SUCCESS the paired elements had been inserted successfully
  */
-GameErrorCode gameTableAddOrEditGame(GameTable game_table, int game_id, GameData data);
+GameError gameTableAddOrEditGame(GameTable game_table, int game_id, GameData data);
 
 /**
  *
@@ -88,16 +96,20 @@ GameTable gameTableCopy(GameTable game_table);
  * @param game_id - game id
  * @param new_result - new result of the game
  */
-GameErrorCode gameTableEditGameResult(GameTable game_table, int game_id, GameResult new_result);
+GameError gameTableEditGameResult(GameTable game_table, int game_id, GameResult new_result);
 
 /**
  *
  * @param game_table - game table in which the game is found
  * @param game_id - game id to modify
  * @param player_id - player id to delete
- * @return Map error codes
+ * @return
+ * 	GAME_NULL_ARGUMENT if a NULL was sent as map or keyElement or dataElement
+ * 	GAME_OUT_OF_MEMORY if an allocation failed (Meaning the function for copying
+ * 	an element or a key failed)
+ * 	GAME_SUCCESS the paired elements had been inserted successfully
  */
-GameErrorCode gameTableDeletePlayerInGame(GameTable game_table, int game_id, int player_id);
+GameError gameTableDeletePlayerInGame(GameTable game_table, int game_id, int player_id);
 
 /**
  *
@@ -105,7 +117,7 @@ GameErrorCode gameTableDeletePlayerInGame(GameTable game_table, int game_id, int
  * @param player_id_table - array of player ids
  * @param table_size - size of points_table and player_id_table
  * @param points_table - array of points corresponding to player_id_table
- * @return number of players in tournament
+ * @return number of players in game table
  */
 int gameTableSumUpPoints(GameTable game_table, int** player_table, int table_size);
 
@@ -117,6 +129,7 @@ int gameTableSumUpPoints(GameTable game_table, int** player_table, int table_siz
  * @return true if the players already met and false if not
  */
 bool gameTableCheckIfPlayersMetAlready(GameTable game_table, int first_player, int second_player);
+
 
 
 #endif //EX1Q4_GAME_H

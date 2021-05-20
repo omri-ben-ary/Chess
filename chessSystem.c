@@ -18,7 +18,6 @@
 #include <stdbool.h>
 // OMRI should add his header files here
 
-#define EXIT_CODE 1
 #define ERROR_CODE (-1)
 #define WIN 0
 #define TIE 2
@@ -64,7 +63,7 @@ static ChessResult chessAddTournamentParametersCheck(ChessSystem chess, int tour
                                                      int max_games_per_player, const char* tournament_location);
 static bool chessLocationNameCheck(const char* name);
 static ChessResult chessAddGameParametersCheck(ChessSystem chess, int tournament_id, int first_player,
-                                               int second_player, Winner winner, int play_time);
+                                               int second_player, Winner winner, int play_time, int game_id);
 static ChessResult chessRemoveTournamentParametersCheck(ChessSystem chess, int tournament_id);
 static ChessResult chessEndTournamentParametersCheck(ChessSystem chess, int tournament_id);
 
@@ -75,20 +74,20 @@ ChessSystem chessCreate()
     ChessSystem chess = malloc(sizeof(*chess));
     if (chess == NULL)
     {
-        return CHESS_OUT_OF_MEMORY;
+        return NULL;
     }
     chess->players = playersMapCreate();
     if (chess->players == NULL)
     {
         free(chess);
-        return CHESS_OUT_OF_MEMORY;
+        return NULL;
     }
     chess->tournament_table = tournamentTableCreate();
     if (chess->tournament_table == NULL)
     {
         playersMapDestroy(chess->players);
         free(chess);
-        return CHESS_OUT_OF_MEMORY;
+        return NULL;
     }
     chess->tournament_ended = false;
     return chess;
@@ -155,6 +154,7 @@ static ChessResult chessAddTournamentParametersCheck(ChessSystem chess, int tour
     }
     return CHESS_SUCCESS;
 }
+
 ChessResult chessAddTournament (ChessSystem chess, int tournament_id,
                                 int max_games_per_player, const char* tournament_location)
 {
@@ -165,28 +165,25 @@ ChessResult chessAddTournament (ChessSystem chess, int tournament_id,
         return parameter_check_result;
     }
     TournamentData tournament_data = tournamentDataCreate(tournament_location, max_games_per_player);
-    TournamentErrorCode check_result = tournamentTableAddOrEditTournament(chess->tournament_table, tournament_id,
+    TournamentError check_result = tournamentTableAddOrEditTournament(chess->tournament_table, tournament_id,
                                                                 tournament_data);
     tournamentDataDestroy(tournament_data);
-    if(check_result == MAP_OUT_OF_MEMORY)
+    if(check_result == TOURNAMENT_OUT_OF_MEMORY)
     {
         return CHESS_OUT_OF_MEMORY;
     }
-    if(check_result == MAP_NULL_ARGUMENT)
-    {
-        return CHESS_NULL_ARGUMENT;
-    }
+    assert(check_result != TOURNAMENT_NULL_ARGUMENT);
     return CHESS_SUCCESS;
 }
 
 static ChessResult chessAddGameParametersCheck(ChessSystem chess, int tournament_id, int first_player,
-                                               int second_player, Winner winner, int play_time)
+                                               int second_player, Winner winner, int play_time, int game_id)
 {
     if(chess == NULL)
     {
         return CHESS_NULL_ARGUMENT;
     }
-    if(tournament_id <= 0 || first_player <= 0 || second_player <= 0)
+    if(tournament_id <= 0 || first_player <= 0 || second_player <= 0 || first_player == second_player)
     {
         return CHESS_INVALID_ID;
     }
@@ -200,7 +197,11 @@ static ChessResult chessAddGameParametersCheck(ChessSystem chess, int tournament
     }
     TournamentData tournament_data = tournamentTableGetTournamentData(chess->tournament_table, tournament_id);
     GameTable game_table = tournamentDataGetGameTable(tournament_data);
-    if(first_player == second_player || gameTableCheckIfPlayersMetAlready(game_table, first_player, second_player))
+    if(tournamentDataGetWinnerId(tournament_data) != 0)
+    {
+        return CHESS_TOURNAMENT_ENDED;
+    }
+    if(gameTableCheckIfPlayersMetAlready(game_table, first_player, second_player))
     {
         return CHESS_GAME_ALREADY_EXISTS;
     }
@@ -208,14 +209,21 @@ static ChessResult chessAddGameParametersCheck(ChessSystem chess, int tournament
     {
         return CHESS_INVALID_PLAY_TIME;
     }
+    int max_games = tournamentDataGetMaxGames(tournament_data);
+    /*if(playersMapAddGameStats(chess->players, first_player, tournament_id, game_id) == TOURNAMENT_STATS_FULL_OF_GAMES)
+    {
+        return CHESS_EXCEEDED_GAMES;
+    }*/ // Gal to update
     return CHESS_SUCCESS;
 }
 
 ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
                          int second_player, Winner winner, int play_time)
 {
+    TournamentData tournament_data = tournamentTableGetTournamentData(chess->tournament_table, tournament_id);
+    int game_id = tournamentDataGetGameIndex(tournament_data);
     ChessResult parameter_check_result = chessAddGameParametersCheck(chess, tournament_id, first_player, second_player,
-                                                                     winner, play_time);
+                                                                     winner, play_time, game_id);
     if(parameter_check_result != CHESS_SUCCESS)
     {
         return parameter_check_result;
@@ -231,20 +239,13 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
     } else{
         game_result = GAME_DRAW;
     }
-    TournamentErrorCode  check_result = tournamentTableAddGame(chess->tournament_table, tournament_id, first_player,
+    TournamentError  check_result = tournamentTableAddGame(chess->tournament_table, tournament_id, first_player,
                                                                second_player,game_result,play_time);
-    if(check_result == MAP_OUT_OF_MEMORY)
+    if(check_result == TOURNAMENT_OUT_OF_MEMORY)
     {
         return CHESS_OUT_OF_MEMORY;
     }
-    if(check_result == MAP_NULL_ARGUMENT)
-    {
-        return CHESS_NULL_ARGUMENT;
-    }
-    if(check_result == MAP_ERROR)
-    {
-        return CHESS_TOURNAMENT_ENDED;
-    }
+    assert(check_result != TOURNAMENT_NULL_ARGUMENT);
     return CHESS_SUCCESS;
 }
 
@@ -272,15 +273,20 @@ ChessResult chessRemoveTournament (ChessSystem chess, int tournament_id)
     {
         return parameter_check_result;
     }
-    TournamentErrorCode check_result = tournamentTableDeleteTournament(chess->tournament_table, tournament_id);
-    if(check_result == MAP_NULL_ARGUMENT)
+    TournamentData tournament_data = tournamentTableGetTournamentData(chess->tournament_table, tournament_id);
+    GameTable game_table = tournamentDataGetGameTable(tournament_data);
+    MAP_FOREACH(int*, iterator, game_table)
     {
-        return CHESS_NULL_ARGUMENT;
+        GameData game_data = gameTableGetGameData(game_table, *iterator);
+        int player = gameDataGetPlayer(game_data, PLAYER1);
+        //Gal updates his ADT using tournament_id and player
+        player = gameDataGetPlayer(game_data, PLAYER2);
+        //Gal updates his ADT using tournament_id and player
+        free(iterator);
     }
-    if(check_result == MAP_ITEM_DOES_NOT_EXIST)
-    {
-        return CHESS_TOURNAMENT_NOT_EXIST;
-    }
+    TournamentError check_result = tournamentTableDeleteTournament(chess->tournament_table, tournament_id);
+    assert(check_result != TOURNAMENT_NULL_ARGUMENT);
+    assert(check_result != TOURNAMENT_DOES_NOT_EXIST);
     return CHESS_SUCCESS;
 }
 
@@ -357,9 +363,9 @@ static double chessCalculateAveragePlayTimeOrRemovePlayer(ChessSystem chess, int
             }
            if (chosen_function == REMOVE_PLAYER_ID)
            {
-               MapResult result = tournamentTableRemovePlayerInGame(chess->tournament_table, player_tournaments[i],
+               TournamentError result = tournamentTableRemovePlayerInGame(chess->tournament_table, player_tournaments[i],
                                                              player_games[j], player_id);
-               assert(result == MAP_SUCCESS);
+               assert(result == TOURNAMENT_SUCCESS);
            }
            if (chosen_function == CALCULATE_AVERAGE_PLAY_TIME)
            {
@@ -404,6 +410,16 @@ static ChessResult chessEndTournamentParametersCheck(ChessSystem chess, int tour
     {
         return CHESS_TOURNAMENT_NOT_EXIST;
     }
+    if(chess->tournament_ended == true)
+    {
+        return CHESS_TOURNAMENT_ENDED;
+    }
+    TournamentData tournament_data = tournamentTableGetTournamentData(chess->tournament_table, tournament_id);
+    GameTable game_table = tournamentDataGetGameTable(tournament_data);
+    if(gameTableGetSize(game_table) == 0)
+    {
+        return CHESS_NO_GAMES;
+    }
     return CHESS_SUCCESS;
 }
 
@@ -414,8 +430,8 @@ ChessResult chessEndTournament (ChessSystem chess, int tournament_id)
     {
         return parameter_check_result;
     }
-    TournamentErrorCode check_result = tournamentTableEndTournament(chess->tournament_table,tournament_id);
-    if(check_result == MAP_OUT_OF_MEMORY)
+    TournamentError check_result = tournamentTableEndTournament(chess->tournament_table,tournament_id);
+    if(check_result == TOURNAMENT_OUT_OF_MEMORY)
     {
         return CHESS_OUT_OF_MEMORY;
     }
@@ -616,14 +632,14 @@ ChessResult chessSavePlayersLevels (ChessSystem chess, FILE* file) {
     {
         return CHESS_OUT_OF_MEMORY;
     }
-    int n = tournamentTableGetNumberOfGames(chess->tournament_table);
+    /*int n = tournamentTableGetNumberOfGames(chess->tournament_table);
     double *ratings_array = chessCalculateAndSortRankings(chess->players, n);
     if (ratings_array == NULL)
     {
         return CHESS_OUT_OF_MEMORY;
     }
     PlayersMapNullifyAllPlayerStats(chess->players);
-    chess_result = chessPrintRankingsToFile(ratings_array, SIZE_OF_PAIR*n, file);
+    chess_result = chessPrintRankingsToFile(ratings_array, SIZE_OF_PAIR*n, file);*/
     return chess_result;
 }
 
@@ -647,12 +663,12 @@ ChessResult chessSaveTournamentStatistics (ChessSystem chess, char* path_file)
     {
         return parameter_check_result;
     }
-    TournamentErrorCode check_result = tournamentTableGetStatsOfTournament(chess->tournament_table,path_file);
-    if(check_result == MAP_OUT_OF_MEMORY)
+    TournamentError check_result = tournamentTableGetStatsOfTournament(chess->tournament_table,path_file);
+    if(check_result == TOURNAMENT_OUT_OF_MEMORY)
     {
         return CHESS_OUT_OF_MEMORY;
     }
-    if(check_result == MAP_ERROR)
+    if(check_result == TOURNAMENT_SAVE_FAILURE)
     {
         return CHESS_SAVE_FAILURE;
     }
