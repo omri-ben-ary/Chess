@@ -1,11 +1,12 @@
 #include "tournament_tests.h"
 #include <assert.h>
 #include <stdbool.h>
-//#include <stdio.h>
+#include <stdio.h>
 
 #define TEST_LEN 25
 void runTournamentsTest()
 {
+    int num =0;
     int fake_id =0;
     int real_id =1;
     TournamentTable tournament_table = tournamentTableCreate();
@@ -38,11 +39,11 @@ void runTournamentsTest()
     for(int i=0; i<TEST_LEN; i++)
     {
         avg_check += (i+1)*10;
-        assert(tournamentTableAddGame(tournament_table, 7, player_ids[i], player_ids[i+1], FIRST, (i+1)*10)
+        assert(tournamentTableAddGame(tournament_table, 7, player_ids[i], player_ids[i+1], FIRST, (i+1)*10, &num)
         == TOURNAMENT_SUCCESS);
-        assert(tournamentTableAddGame(tournament_table, 8, player_ids[i], player_ids[i+1], SECOND, (i+1)*10)
+        assert(tournamentTableAddGame(tournament_table, 8, player_ids[i], player_ids[i+1], SECOND, (i+1)*10, &num)
         == TOURNAMENT_SUCCESS);
-        assert(tournamentTableAddGame(tournament_table, 9, player_ids[i], player_ids[i+1], GAME_DRAW, (i+1)*10)
+        assert(tournamentTableAddGame(tournament_table, 9, player_ids[i], player_ids[i+1], GAME_DRAW, (i+1)*10, &num)
         == TOURNAMENT_SUCCESS);
     }
     avg_check /= TEST_LEN;
@@ -74,36 +75,37 @@ void runTournamentsTest()
     GameData game_data_3 = gameTableGetGameData(game_table_4, 1);
     assert(gameDataGetPlayer(game_data_3, PLAYER1) == PLAYER_NOT_FOUND);
 
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[1], GAME_DRAW, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[2], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[2], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[3], SECOND, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[3], SECOND, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[4], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[4], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[5], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[5], GAME_DRAW, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[6], GAME_DRAW, 11) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[3], player_ids[4], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[3], player_ids[5], GAME_DRAW, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[0], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[1], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[2], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[3], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[4], FIRST, 10) == TOURNAMENT_SUCCESS);
-    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[5], FIRST, 10) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[1], GAME_DRAW, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[2], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[2], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[3], SECOND, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[3], SECOND, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[4], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[4], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[1], player_ids[5], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[5], GAME_DRAW, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[0], player_ids[6], GAME_DRAW, 11, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[3], player_ids[4], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[3], player_ids[5], GAME_DRAW, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[0], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[1], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[2], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[3], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[4], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[5], FIRST, 10, &num) == TOURNAMENT_SUCCESS);
     for(int i=13; i<19; i++)
     {
         assert(tournamentTableRemovePlayerInGame(tournament_table, 1, i, player_ids[7]) == TOURNAMENT_SUCCESS);
     }
+    assert(tournamentTableAddGame(tournament_table, 1, player_ids[7], player_ids[3], SECOND, 10, &num) == TOURNAMENT_SUCCESS);
     assert(tournamentTableEndTournament(tournament_table, 1) == TOURNAMENT_SUCCESS);
     assert(tournamentTableEndTournament(tournament_table, 7) == TOURNAMENT_SUCCESS);
     assert(tournamentTableEndTournament(tournament_table, 8) == TOURNAMENT_SUCCESS);
     TournamentData tournament_data_1 = tournamentTableGetTournamentData(tournament_table, 1);
     assert(tournamentDataGetWinnerId(tournament_data_1) == player_ids[3]);
-    //printf("%d\n", tournamentDataGetWinnerId(tournament_data_1));
+//    printf("%d\n", tournamentDataGetWinnerId(tournament_data_1));
 
-    assert(tournamentTableGetStatsOfTournament(tournament_table, "C:\\Users\\User\\stats.txt") == TOURNAMENT_SUCCESS);
+    assert(tournamentTableGetStats(tournament_table, "C:\\Users\\User\\stats.txt") == TOURNAMENT_SUCCESS);
     tournamentTableDestroy(tournament_table);
     gameTableDestroy(game_table);
     tournamentDataDestroy(tournament_data);

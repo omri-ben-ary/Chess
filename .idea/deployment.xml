@@ -8,20 +8,34 @@
             <mapping deploy="ex1/chess" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release-remote-host" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host20" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host9" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-mingw" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-mingw" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-5" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host-6" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release-remote-host-7" />
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host-3" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host33" />
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host-1" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host31" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release-remote-host24" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host27" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-hostgal2" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host25" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host23" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host21" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release-remote-host-7" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-release-remote-host" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host28" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host26" />
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host-2" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host32" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host30" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host22" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host9" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host20" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-hostgal2" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-mingw" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-mingw" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-hostgal" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-5" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote-host-6" />
           </excludedPaths>
         </serverdata>
       </paths>

@@ -1,0 +1,2 @@
+/home/omri/mtm/ex1/chess/cmake-build-debug-remote-host32/CMakeFiles/rebuild_cache.dir
+/home/omri/mtm/ex1/chess/cmake-build-debug-remote-host32/CMakeFiles/edit_cache.dir

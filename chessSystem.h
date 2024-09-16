@@ -59,7 +59,7 @@ void chessDestroy(ChessSystem chess);
  * @param chess - chess system to add the tournament to. Must be non-NULL.
  * @param tournament_id - new tournament id. Must be positive, and unique.
  * @param max_games_per_player - maximum number of games a player is allow to play in the specified tournament.
- *                               Must be postivie/
+ *                               Must be positive/
  * @param tournament_location - location in which the tournament take place. Must be non-empty.
  *
  * @return

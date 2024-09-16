@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/omri/mtm/ex1/chess/chessSystem.h
+stdio.h
+-
+
+/home/omri/mtm/ex1/chess/chess_test_mtm2.c
+stdlib.h
+-
+./chessSystem.h
+/home/omri/mtm/ex1/chess/chessSystem.h
+./test_utilities.h
+/home/omri/mtm/ex1/chess/test_utilities.h
+math.h
+-
+
+/home/omri/mtm/ex1/chess/test_utilities.h
+stdbool.h
+-
+stdio.h
+-
+

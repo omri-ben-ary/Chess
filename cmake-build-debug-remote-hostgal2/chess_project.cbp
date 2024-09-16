@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="chess_project"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="chess_project">
+				<Option output="/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/chess_project" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 chess_project"/>
+					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="chess_project/fast">
+				<Option output="/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/chess_project" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 chess_project/fast"/>
+					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j32 -f &quot;/home/omri/mtm/ex1/chess/cmake-build-debug-remote-hostgal2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/omri/mtm/ex1/chess/chessSystem.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/chessSystem.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/chessSystemTests.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/chessSystemTests.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/chess_test_mtm2.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/game.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/game.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/gameData.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/gameData.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/game_tests.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/game_tests.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/map.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/pair.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playerStats.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playerStats.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playerTournamentStats.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playerTournamentStats.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playerTournamentsMap.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playerTournamentsMap.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playersMap.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/playersMap.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/players_map_tests.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/players_map_tests.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/test_utilities.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournament.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournament.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournamentData.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournamentData.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournament_tests.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournament_tests.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournaments_history_table_tests.c">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/tournaments_history_table_tests.h">
+			<Option target="chess_project"/>
+		</Unit>
+		<Unit filename="/home/omri/mtm/ex1/chess/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
